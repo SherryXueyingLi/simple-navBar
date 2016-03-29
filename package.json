@@ -1,5 +1,5 @@
 {
-  "name":"startup-template",
+  "name":"simple-navBar",
   "version": "0.1",
   "licence": "MIT",
   "author":{
@@ -9,7 +9,5 @@
   
   "dependencies": {
       "jquery": ">1.7.2",
-      "requirejs": "^2.2.0",
-      "angular": "^2.0.0",
    }
 }

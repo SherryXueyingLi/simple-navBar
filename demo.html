@@ -4,47 +4,167 @@
 <title>Menu Bar</title>
 <script src="src/lib/jquery.js"></script>
 <script src="simple-navBar.js"></script>
-<link rel="stylesheet" type="text/css" href="stylesheets/site.css"></link>
+<link rel="stylesheet" type="text/css" href="stylesheets/navBar-menu.css"></link>
+<style type="text/css">
+body {
+	font-family: Calibri, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	margin: 0px;
+}
+
+.demoZone {
+	position: relative;
+	top: 0;
+	padding: 10px;
+	border-radius: 3px;
+	margin: 5px;
+}
+
+.demoZone>.codeZone {
+	position: relative;
+	background-color: #f7f7f9;
+    border: 1px solid #e1e1e8;
+    border-radius: 4px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.demoZone>.funcZone {
+	width: 100%;
+	background-color: white;
+	margin-bottom: 5px;
+}
+
+button {
+	background-color: white;
+	border-radius: 5px;
+	border: solid 1px #B5B1B1;
+	padding: 5px;
+}
+
+button:active {
+	background-color: #E8F3F0;
+}
+
+button:focus {
+	border: solid 1px C7C7C7;
+}
+
+#sideBar li>a {
+	color: gray;
+	text-decoration: none;
+}
+
+#sideBar li.navBar.active>a {
+	color: #F3B27A;
+}
+</style>
 </head>
 
 <body>
-	<div id="nav">
-	</div>
-	<div class="board" style="position: absolute; top: 5%">
-	
-		<div style="position: relative">
-			<button id="setActive">Set Download Active</button>
-			<button id="getActive">Get Active</button><label id="currentActive"></label>
-			<button id="refresh">Refresh</button><label id="currentActive"></label>
+	<div id="nav"></div>
+	<div class="board" style="position: relative; top: 40px; height: 100%; left: 0px; padding: 20px;">
+
+
+		<div style="height: 100%; overflow: auto;">
+			<div id="sideBar" style="display: inline-block; position: relative; left: 0; top: 0; padding-left: 10px; width: 20%; float: left;"></div>
+			<div id="route" style="display: inline-block; position: relative; width: 78%; height: 100%; float: left; ">
+				<div id="document-api" style="height: 100%;padding: 20px;">
+				<h1>Javascript API</h1>
+					<div class="demoZone">
+						<div class="funcZone">
+							<div style="width: 100%; padding: 5px;">
+								<button onclick="setActive()">Set Download Active</button>
+								<pre>To set the active menu by js func.</pre>
+							</div>
+						</div>
+						<div class="codeZone">
+							<pre>$(element).navBar("active","download");</pre>
+						</div>
+					</div>
+					<div class="demoZone">
+						<div class="funcZone">
+							<div style="width: 100%; padding: 5px;">
+								<button onclick="getActive()" style="display: inline-block;">Get Active</button>
+								<label id="currentActive"></label>
+								<pre>To get the active menu by js func.</pre>
+							</div>
+						</div>
+						<div class="codeZone">
+							<pre>$(element).navBar("active");</pre>
+						</div>
+					</div>
+					<div class="demoZone">
+						<div class="funcZone">
+							<div style="width: 100%; padding: 5px;">
+								<button onclick="add()">ADD</button>
+								<pre>To ADD a list to menu</pre>
+							</div>
+						</div>
+						<div class="codeZone">
+							<pre>$(element).navBar("add", {});</pre>
+						</div>
+					</div>
+				</div>
+				<div id="download" style="height: 500px;">download</div>
+			</div>
+
 		</div>
 	</div>
 </body>
 
+
 <script type="text/javascript">
-var defaultMenu = [{name: "main", label: "Main", path: "main/controller"}, 
-                   {name: "document", label:"Documents", 
-   					 sub:[{name: "start", label:"Quick Start"},
-        				  {name: "api", label:"APIs"}]},
-					{name: "download", label:"Download"}];
-$("#nav").navBar({
-    tabs : defaultMenu,
-   onClick: function(tab){
-       console.log(tab);
-   },
-});
+    var defaultMenu = [ {
+	name : "main",
+	label : "Main",
+	path : "main/controller"
+    }, {
+	name : "document",
+	label : "Documents",
+	sub : [ {
+	    name : "start",
+	    label : "Quick Start"
+	}, {
+	    name : "api",
+	    label : "APIs"
+	} ]
+    }, {
+	name : "download",
+	label : "Download"
+    } ];
+    $("#nav").navBar({
+	tabs : defaultMenu,
+	style : 'navDiv',
+	onClick : function(tab) {
+	    console.log(tab);
+	},
+	route : false,
+    });
 
-$("#getActive").click(function(){
-    var active = $("#nav").navBar("active");
-    $("#currentActive").text(active.title);
-});
+    $("#sideBar").navBar({
+	tabs : defaultMenu,
+	autoClose : false,
 
-$("#setActive").click(function(){
-    var active = $("#nav").navBar("active","download");
-});
+    });
 
-$("#refresh").click(function(){
-    $("#nav").navBar("refresh");
-});
+    function getActive() {
+	var active = $("#nav").navBar("active");
+	$("#currentActive").text("Get: " + active.title);
+    };
 
+    function setActive() {
+	var active = $("#nav").navBar("active", "download");
+    };
+
+    function add() {
+	$("#nav").navBar("add", {
+	    name : 'about',
+	    title : 'About'
+	});
+    };
+
+    function remove() {
+	$("#nav").navBar("remove", "about");
+    };
 </script>
 </html>
