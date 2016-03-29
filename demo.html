@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Menu Bar</title>
+<script src="src/lib/jquery.js"></script>
+<script src="simple-navBar.js"></script>
+<link rel="stylesheet" type="text/css" href="stylesheets/site.css"></link>
+</head>
+
+<body>
+	<div id="nav">
+	</div>
+	<div class="board" style="position: absolute; top: 5%">
+	
+		<div style="position: relative">
+			<button id="setActive">Set Download Active</button>
+			<button id="getActive">Get Active</button><label id="currentActive"></label>
+			<button id="refresh">Refresh</button><label id="currentActive"></label>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript">
+var defaultMenu = [{name: "main", label: "Main", path: "main/controller"}, 
+                   {name: "document", label:"Documents", 
+   					 sub:[{name: "start", label:"Quick Start"},
+        				  {name: "api", label:"APIs"}]},
+					{name: "download", label:"Download"}];
+$("#nav").navBar({
+    tabs : defaultMenu,
+   onClick: function(tab){
+       console.log(tab);
+   },
+});
+
+$("#getActive").click(function(){
+    var active = $("#nav").navBar("active");
+    $("#currentActive").text(active.title);
+});
+
+$("#setActive").click(function(){
+    var active = $("#nav").navBar("active","download");
+});
+
+$("#refresh").click(function(){
+    $("#nav").navBar("refresh");
+});
+
+</script>
+</html>
