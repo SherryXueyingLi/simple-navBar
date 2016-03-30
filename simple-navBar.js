@@ -243,16 +243,16 @@ if (typeof jQuery === 'undefined') {
 	var legaled = [];
 	for(var i in tabs){
 	    if(!(tabs[i].name)){
-		throw ReferenceError("tab.name is required", "simple-navBar.js");
+			throw ReferenceError("tab.name is required", "simple-navBar.js");
 	    }else if(nameCache.indexOf(tabs[i].name)>=0){
-		console.warn("tab.name ["+tabs[i].name+"]is duplicated, second one will be ignored");
+			console.warn("tab.name ["+tabs[i].name+"]is duplicated, second one will be ignored");
 	    }else{
-		var legal = $.extend({}, tabs[i]);
-		nameCache.push(tabs[i].name);
+			var legal = $.extend({}, tabs[i]);
+			nameCache.push(tabs[i].name);
 		if(tabs[i].sub){
 		    legal.sub = checkTabs(tabs[i].sub);
 		}
-		legaled.push(legal);
+			legaled.push(legal);
 	    }
 	    
 	}
@@ -268,8 +268,8 @@ if (typeof jQuery === 'undefined') {
 	if(level >= name.length || !tabArray) return;
 	for(var i=0; i<tabArray.length; i++){
 	    if(tabArray[i].name === name[level]){
-		if(level === name.length-1) return tabArray[i];
-		return findTab(name, level+1, tabArray.children);
+			if(level === name.length-1) return tabArray[i];
+			return findTab(name, level+1, tabArray.children);
 	    }else{
 		var subs = findTab(name, level, tabArray.children);
 		if(subs){
@@ -314,21 +314,22 @@ if (typeof jQuery === 'undefined') {
     };
     
     var removeByName = function(tabs, names, predix){
-	for(var i in tabs){
-	    var tab = tabs[i];
-	    var tarname = predix?predix+"."+tab.name:tab.name;
-	    if(names.indexOf(tarname)>=0){
-		tabs.splice(i, 1);
-	    }else if(tab.sub){
-		removeByName(tab.sub, names, tab.name);
-	    }
-	}
+    	return tabs.filter(function(tab){
+    		var tarname = predix?predix+"."+tab.name:tab.name;
+	    	if(names.indexOf(tarname)>=0){
+				return false;
+	    	}
+	    	if(tab.sub){
+				tab.sub = removeByName(tab.sub, names, tab.name);
+	    	}
+	    	return true;
+    	});
     }
     var removeProcessor = function(){
-	var names;
-	Array.isArray(arguments[1]) ? names=arguments[1] : names=[arguments[1]];
-	removeByName(this.options.tabs, names);
-	this.init();
+		var names;
+		Array.isArray(arguments[1]) ? names=arguments[1] : names=[arguments[1]];
+		this.options.tabs = removeByName(this.options.tabs, names);
+		this.init();
     };
     
     

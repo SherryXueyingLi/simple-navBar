@@ -1,25 +1,10 @@
 var defaultMenu = [ {
-	name : "main",
-	label : "Main",
-	path : "main/controller"
-    }, {
-	name : "document",
-	label : "Documents",
-	sub : [ {
-	    name : "start",
-	    label : "Quick Start"
-	}, {
-	    name : "config",
-	    label : "Configure",
-	    href: "myconfigure"
-	}, {
-	    name : "api",
-	    label : "APIs"
-	} ]
-    }, {
-	name : "download",
-	label : "Download"
-    } ];
+	name : "main",label : "Main", path : "main/controller"}, {
+	name : "document", label : "Documents", sub : [ {
+	    name : "start",label : "Quick Start"}, {
+	    name : "config", label : "Configure", href: "myconfigure"}, {
+	    name : "api", label : "APIs"} ]}, {
+	name : "download", label : "Download"} ];
     $("#nav").navBar({
 		tabs : defaultMenu,
 		style : 'navDiv',
@@ -39,48 +24,35 @@ var defaultMenu = [ {
     $("#sideBar").navBar("add",{name: 'claim', label: 'Claim'});
 
     function getActive() {
-	var active = $("#nav").navBar("active");
-	$("#currentActive").text("Get: " + active.label+", Check the returned object in console.");
-	console.log(["get active object: ", active]);
+		var active = $("#nav").navBar("active");
+		("#currentActive").text("Get: " + active.label+", Check the returned object in console.");
+		console.log(["get active object: ", active]);
     };
 
     function setActive() {
-	var active = $("#nav").navBar("active", "download");
+		var active = $("#nav").navBar("active", "download");
     };
 
     function add() {
-	$("#nav").navBar("add", {
-	    name : 'about',
-	    label : 'About'
-	});
+		$("#nav").navBar("add", {name : 'about', label : 'About'});
     };
     
     function addList() {
-	$("#nav").navBar("add", [{
-	    name : 'demo',
-	    label : 'Demo'
-	},{
-	    name : 'about',
-	    label : 'About'
-	}]);
+		$("#nav").navBar("add", [{ name : 'demo', label : 'Demo'},
+			{name : 'about', label : 'About'}]);
     };
     
     function addToAbout(){
-	$("#nav").navBar("add", [{
-	    name : 'me',
-	    label : 'Me'
-	},{
-	    name : 'team',
-	    label : 'Team'
-	}], 'about');
+		$("#nav").navBar("add", [{name : 'me', label : 'Me'},
+			{name : 'team',label : 'Team'}], 'about');
     };
 
     function removeAbout() {
-	$("#nav").navBar("remove", "about");
+		$("#nav").navBar("remove", "about");
     };
     function removeList() {
-	$("#nav").navBar("remove", ["about","demo"]);
+		$("#nav").navBar("remove", ["about","demo"]);
     };
     function removeMe() {
-	$("#nav").navBar("remove", ["about.me", "demo"]);
+		$("#nav").navBar("remove", ["about.me", "demo"]);
     };
