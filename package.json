@@ -1,0 +1,13 @@
+{
+  "name":"simple-navBar",
+  "version": "0.1",
+  "licence": "MIT",
+  "author":{
+  	"name" : "Sherry Li",
+  	"email" : "SherryXueying.Li@aliyun.com"
+  },
+  
+  "dependencies": {
+      "jquery": ">1.7.2",
+   }
+}
