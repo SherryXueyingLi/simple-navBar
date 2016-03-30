@@ -4,6 +4,7 @@
 <title>Menu Bar</title>
 <script src="src/lib/jquery.js"></script>
 <script src="simple-navBar.js"></script>
+
 <link rel="stylesheet" type="text/css" href="stylesheets/navBar-menu.css"></link>
 <style type="text/css">
 body {
@@ -19,7 +20,7 @@ body {
 	margin: 5px;
 }
 
-.demoZone>.codeZone {
+.codeZone {
 	position: relative;
 	background-color: #f7f7f9;
     border: 1px solid #e1e1e8;
@@ -48,6 +49,15 @@ button:active {
 button:focus {
 	border: solid 1px C7C7C7;
 }
+#sideBar{
+	display: inline-block; 
+	position: relative; 
+	left: 0; 
+	top: 0; 
+	padding-left: 10px;
+	width: 20%; 
+	float: left;
+}
 
 #sideBar li>a {
 	color: gray;
@@ -57,24 +67,54 @@ button:focus {
 #sideBar li.navBar.active>a {
 	color: #F3B27A;
 }
+.demoTitle {
+	position: absolute; 
+	top:10px; 
+	font-weight:bold; 
+	font-size:1.3em; 
+	padding-left: 5%;
+	display: inline-block;
+}
 </style>
 </head>
 
 <body>
-	<div id="nav"></div>
-	<div class="board" style="position: relative; top: 40px; height: 100%; left: 0px; padding: 20px;">
-
-
+	<div id="nav"><div class="demoTitle">Nav Bar Demo</div></div>
+	<div class="board" style="position: relative; height: 100%; left: 0px; padding: 20px;">
 		<div style="height: 100%; overflow: auto;">
-			<div id="sideBar" style="display: inline-block; position: relative; left: 0; top: 0; padding-left: 10px; width: 20%; float: left;"></div>
-			<div id="route" style="display: inline-block; position: relative; width: 78%; height: 100%; float: left; ">
+			<div id="sideBar" style="">
+			<div style="top:10px; font-weight:bold; padding-left: 10px;">Side Bar Demo</div>
+			</div>
+			<div id="route" style="display: inline-block; position: relative; left:20%; width: 78%; height: 100%; float: left; ">
+				<div id="document-start" style="height: 100%;padding: 20px;">
+				<h1>What is this for</h1>
+				<pre>I have no idea, just for fun I guess.</pre>
+				</div>
+				<div id="document-start" style="height: 100%;padding: 20px;">
+				<h1>Quick Start</h1>
+				<pre>Import the simple-navBar.js and navBar-menu.css file, since nevbar is depends on jquery, please import it first</pre>
+				<div class="codeZone">
+					<pre>&lt;script src=&quot;src/lib/jquery.js&quot;&gt;&lt;/script&gt;</pre>
+					<pre>&lt;script src=&quot;simple-navBar.js&quot;&gt;&lt;/script&gt;</pre>
+					<pre>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;stylesheets/navBar-menu.css&quot;&gt;&lt;/link&gt;</pre>
+				</div>
+				<pre>Init the navBar by following $(youElement).navBar([options Object]): </pre>
+				<pre>Check the options in Configure Section.</pre>
+				<div class="codeZone">
+					<pre>$(element).navBar({});</pre>
+				</div>
+				
+				</div>
+				<div id="myconfigure" style="height: 100%;padding: 20px;">
+				<h1>Configure</h1>
+				</div>
 				<div id="document-api" style="height: 100%;padding: 20px;">
 				<h1>Javascript API</h1>
 					<div class="demoZone">
+						<h3>Set the active by script.</h3>
 						<div class="funcZone">
 							<div style="width: 100%; padding: 5px;">
 								<button onclick="setActive()">Set Download Active</button>
-								<pre>To set the active menu by js func.</pre>
 							</div>
 						</div>
 						<div class="codeZone">
@@ -82,11 +122,11 @@ button:focus {
 						</div>
 					</div>
 					<div class="demoZone">
+						<h3>Get the actived menu by script</h3>
 						<div class="funcZone">
 							<div style="width: 100%; padding: 5px;">
 								<button onclick="getActive()" style="display: inline-block;">Get Active</button>
 								<label id="currentActive"></label>
-								<pre>To get the active menu by js func.</pre>
 							</div>
 						</div>
 						<div class="codeZone">
@@ -94,77 +134,83 @@ button:focus {
 						</div>
 					</div>
 					<div class="demoZone">
+						<h3>Adding new context</h3>
 						<div class="funcZone">
 							<div style="width: 100%; padding: 5px;">
-								<button onclick="add()">ADD</button>
-								<pre>To ADD a list to menu</pre>
+								<pre>Add single menu context</pre>
+								<button onclick="add()">Add About</button>
 							</div>
 						</div>
 						<div class="codeZone">
-							<pre>$(element).navBar("add", {});</pre>
+							<pre>$(element).navBar("add", {name: 'about', label:'About'});</pre>
+						</div>
+						<div class="funcZone">
+							<div style="width: 100%; padding: 5px;">
+								<pre>Add a list of menu context</pre>
+								<pre>Note: Duplicated named object will be ignored.</pre>
+								<button onclick="addList()">Add About & Demo</button>
+							</div>
+						</div>
+						<div class="codeZone">
+							<pre>$(element).navBar("add", [{name:'demo', label:'Demo'},{name: 'about', label:'About'}]);</pre>
+						</div>
+						<div class="funcZone">
+							<div style="width: 100%; padding: 5px;">
+								<pre>Add a list of menu context, with parent note indecated. </pre>
+								<pre>Note: If parent node do note exist, will add to first level</pre>
+								<button onclick="addToAbout()">Add To About</button>
+							</div>
+						</div>
+						<div class="codeZone">
+							<pre>$(element).navBar("add", [{name:'demo', label:'Demo'},{name: 'about', label:'About'}]);</pre>
+						</div>
+					</div>
+					<div class="demoZone">
+						<h3>Removing context</h3>
+						<div class="funcZone">
+							<div style="width: 100%; padding: 5px;">
+								<pre>Remove single menu context</pre>
+								<button onclick="removeAbout()">Remove About</button>
+							</div>
+						</div>
+						<div class="codeZone">
+							<pre>$(element).navBar("remove", 'about');</pre>
+						</div>
+						<div class="funcZone">
+							<div style="width: 100%; padding: 5px;">
+								<pre>Remove a list of menu context</pre>
+								<pre>Note: If the context already dropped, it will be ignored.</pre>
+								<pre>Note: Please click 'Add List' in order to test.</pre>
+								<button onclick="removeList()">Remove About & Demo</button>
+							</div>
+						</div>
+						<div class="codeZone">
+							<pre>$(element).navBar("remove", ['about', 'demo']);</pre>
+						</div>
+						<div class="funcZone">
+							<div style="width: 100%; padding: 5px;">
+								<pre>Remove a list of menu context, with parent note indecated. </pre>
+								<pre>Note: Remove a sub option without indicating the parent name is allowed, but indecating parent name could be more secure</pre>
+								<pre>Note: Please click 'Add About & Demo' and 'Add to About' before test.</pre>
+								<button onclick="removeMe()">Remove Me&Demo</button>
+							</div>
+						</div>
+						<div class="codeZone">
+							<pre>$(element).navBar("remove", ['about.me', 'demo']);</pre>
+							<pre>$(element).navBar("remove", ['me', 'demo']);</pre>
 						</div>
 					</div>
 				</div>
-				<div id="download" style="height: 500px;">download</div>
+				<div id="download" style="height: 500px;">
+				<h1>Download</h1>
+				</div>
 			</div>
 
 		</div>
 	</div>
 </body>
-
-
+<script src="funcs.js"></script>
 <script type="text/javascript">
-    var defaultMenu = [ {
-	name : "main",
-	label : "Main",
-	path : "main/controller"
-    }, {
-	name : "document",
-	label : "Documents",
-	sub : [ {
-	    name : "start",
-	    label : "Quick Start"
-	}, {
-	    name : "api",
-	    label : "APIs"
-	} ]
-    }, {
-	name : "download",
-	label : "Download"
-    } ];
-    $("#nav").navBar({
-	tabs : defaultMenu,
-	style : 'navDiv',
-	onClick : function(tab) {
-	    console.log(tab);
-	},
-	route : false,
-    });
 
-    $("#sideBar").navBar({
-	tabs : defaultMenu,
-	autoClose : false,
-
-    });
-
-    function getActive() {
-	var active = $("#nav").navBar("active");
-	$("#currentActive").text("Get: " + active.title);
-    };
-
-    function setActive() {
-	var active = $("#nav").navBar("active", "download");
-    };
-
-    function add() {
-	$("#nav").navBar("add", {
-	    name : 'about',
-	    title : 'About'
-	});
-    };
-
-    function remove() {
-	$("#nav").navBar("remove", "about");
-    };
 </script>
 </html>

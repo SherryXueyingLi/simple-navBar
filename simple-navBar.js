@@ -6,7 +6,7 @@ if (typeof jQuery === 'undefined') {
 	return;
     }
     //var options, tabs, onClick, active, onActiveChange, afterActiveChanged; 
-    var tabObject = function(name, title, parent, path, viewPath, href){
+    var tabObject = function(name, label, parent, path, viewPath, href){
 	var  children = [];
 	var addChild = function(child){
 	    if(child instanceof tabObject){
@@ -20,8 +20,8 @@ if (typeof jQuery === 'undefined') {
 	Object.defineProperties(this,{
 	    'name':{
 		value: name,
-	    },'title':{
-		value: title || name
+	    },'label':{
+		value: label || name
 	    },'parent':{
 		value:parent
 	    },'controllerPath':{
@@ -59,7 +59,7 @@ if (typeof jQuery === 'undefined') {
 		get: function() {
 			return href || this.code;
 		}
-	    }
+	    },
 	});
 	
 	
@@ -70,7 +70,7 @@ if (typeof jQuery === 'undefined') {
     var processTab = function(tabArray, parent){
 	var tabs = [];
 	for(var i in tabArray){
-	    var tab = new tabObject(tabArray[i].name, tabArray[i].label, parent, tabArray[i].path, tabArray[i].view);
+	    var tab = new tabObject(tabArray[i].name, tabArray[i].label, parent, tabArray[i].path, tabArray[i].view, tabArray[i].href);
 	    tabs.push(tab);
 	    if(tabArray[i].sub && tabArray[i].sub.length>0){
 		var subs = processTab(tabArray[i].sub, tab);
@@ -80,11 +80,60 @@ if (typeof jQuery === 'undefined') {
 	return tabs;
     };
     
+    var currentLevel = 0;
+    var buildContext = function(){
+	currentLevel = 0;
+	$(this.options.element).children("ul.navUl").detach();
+	var ul = buildUl.call(this,  this.tabs).appendTo($(this.options.element));
+	ul.css("")
+    };
+    
+    var buildUl = function(tabs){
+	var ul = document.createElement("ul");
+	ul.classList.add("navBar_"+currentLevel, "navUl");
+	for(var i in tabs){
+	    createLi.call(this, tabs[i]).appendTo($(ul));
+	}
+	this.options.autoClose && tabs[0].parent &&ul.classList.add("autoClose");
+	return $(ul);
+    }
+    
+    var createLi = function(tab){
+	var li = document.createElement("li");
+	li.classList.add("navBarli_"+currentLevel, "navBar");
+	li.setAttribute("navCode", tab.code);
+	var span = document.createElement("a"), self=this;
+	$(span).appendTo($(li));
+	span.text=tab.label;
+	this.options.route && span.setAttribute("href","#"+tab.href);
+	span.onclick = function($event){
+	    stateClickCallback.call(self, $event, tab);
+	};
+	if(tab.children.length>0){
+	    this.options.arrow && $(span).append($(arrowDownElement()));
+	    
+	    currentLevel++;
+	    buildUl.call(this, tab.children).appendTo($(li));
+	    currentLevel--;
+	}
+	return $(li);
+    };
+    
+    var arrowDownElement = function(){
+	var div = document.createElement("div");
+	div.classList.add("arrowDown"); 
+	return div;
+    };
+    var stateClickCallback = function($event, tab){
+	this.setActive(tab);
+	this.options.onClick.call(this, $event, tab);
+    };
+    
     var findActive = function(tabs){
 	if(!tabs) return;
 	for(var i in tabs){
-	    if($(tabs[i].span).parent().hasClass("active")){
-		return findActive(tabs[i].children) || tabs[i];
+	    if(this.findLi(tabs[i]).hasClass("active")){
+		return findActive.call(this, tabs[i].children) || tabs[i];
 	    }
 	}
 	return;
@@ -93,136 +142,126 @@ if (typeof jQuery === 'undefined') {
     var navBar = function(options){
 	var self = this, tabs, active, opt = options;
 	var $element = $(options.element);
-	try{
-	    checkOption(options);
-	    this.active = null;
-	}catch(e){
-	    console.debug(e); 
-	}
+	
 	Object.defineProperties(this, {'options':{
 	    get: function(){ return opt;}
 	},'tabs':{
 	    get: function(){ return tabs;}
 	},'active':{
 	    get: function(){
-		return findActive(this.tabs);
+		return findActive.call(this, this.tabs);
 	    },
 	}
 	});
 	self.init = function(){
-	    tabs = processTab(this.options.tabs, null);
-	    buildContext.call(this);
-	    if(this.options.active){
-		active = findTab.call(this, this.options.active);
+	    try{
+		checkOption(this.options);
+		tabs = processTab(this.options.tabs, null);
+		this.buildContext();
+		this.active = null;
+		if(this.options.active){
+		    active = findTab.call(this, this.options.active);
+		}
+		if(!active){
+		    active = this.tabs[0];
+		    while(active.children.length>0){
+			active = active.children[0];
+		    }
+		}
+		this.setActive(active);
+		this.options.horizon? $element.children().css("display","inline-block"):$element.children().css("display","block");
+		$element.data["navBar"] = this;//set element data attribute
+	    }catch(e){
+		console.debug(e); 
 	    }
-	    if(!active){
-		active = this.tabs[0];
-		while(active.children.length>0){
-		    active = active.children[0];
+	    if(this.options.pin) {
+		$element.css("position", "fixed");
+		$element.css("top", $element.parent().offset().top);
+		$element.css("left", $element.parent().offset().left);
+	    }
+	}
+    };
+    
+    navBar.prototype.buildContext = function(){
+	buildContext.call(this);
+    };
+    
+    navBar.prototype.findLi = function(tab){
+	return $(this.options.element).find("li[navCode='"+tab.code+"']");
+    };
+    
+    navBar.prototype.findConfigTab = function(name){
+	return name && findConfig.call(this, this.options.tabs, name.split("."), 0);
+    };
+    var findConfig = function(tabs, name, level){
+	if(level >= name.length || !tabs) return;
+	for(var i=0; i<tabs.length; i++){
+	    if(tabs[i].name === name[level]){
+		if(level === name.length-1) return tabs[i];
+		return findConfig(tabs.sub, name, level+1);
+	    }else{
+		var subs = findConfig(tabs.sub, name, level);
+		if(subs){
+		    return subs;
 		}
 	    }
-	    self.setActive(active);
-	    $element.data["navBar"] = self;
+	    
 	}
+	return;
+	
     };
-    
-    var buildContext = function(){
-	$(this.options.element).empty();
-	buildUl.call(this, $(this.options.element), this.tabs, "firstLevel", "firstLevelLi");
-    };
-    
-    var buildSecondLevelUl = function($li, tabs){
-	return buildUl.call(this, $li, tabs, "secondLevel", "secondLevelLi");
-    };
-    
-    var buildUl = function($element, tabs, ulClass, liClass){
-	var ul = document.createElement("ul");
-	$(ul).addClass(ulClass+" navUl");
-	if(tabs[0] && tabs[0].parent){
-	    $(ul).addClass(tabs[0].parent.code);
-	}
-	for(var i in tabs){
-	    var li = document.createElement("li");
-	    buildLi.call(this, $(ul), $(li), tabs[i], $element);
-	    $(li).addClass(liClass+" navBar");
-	    $(li).appendTo(ul);
-	}
-	$(ul).appendTo($element);
-	return $(ul);
-    }
-    
-    var buildLi = function($ul, $li, tab, $element){
-	var span = document.createElement("a"), self=this;
-	$(span).text(tab.title);
-	$(span).click(function(){
-	    stateClickCallback.call(self, $element, this, tab);
-	});
-	/*$(span).hover(function(){
-	    $(this).css( 'cursor', 'pointer' );
-	});*/
-	if(this.options.route)
-	    $(span).attr("href","#"+tab.href);
-	$(span).appendTo($li);
-	tab.span = span;
-	if(tab.children.length>0){
-	    var ul = buildSecondLevelUl.call(self, $li, tab.children);
-	}
-    };
-    
-    var stateClickCallback = function($element, $span, tab){
-	this.setActive(tab, $element);
-	this.options.onClick.call(this, tab, $span, $element);
-    };
-    
-    navBar.prototype.setActive = function(tab, element){
+    navBar.prototype.setActive = function(tab){
 	if(!tab){
 	    throw ReferenceError("Active tab is required", "simple-navBar.js");
 	}
-	onActiveChange(this.active, tab);
+	this.options.onActiveChange.call(this.active, tab);
+	var li = this.findLi(tab);
 	if(tab.children.length>0){
-	    $(tab.span).siblings("ul").toggle();
+	    li.children("ul").slideToggle(100);
 	    return;
 	}
 	$(this.options.element).find(".navBar").removeClass("active");
-	$(tab.span).parent().addClass("active")
-	if(tab.parent && this.options.autoClose){
-	    $(this.options.element).find("."+tab.parent.code).hide(100);
-	}
-	var curr = tab;
-	while(curr.parent){
-	    $(curr.parent.span).parent().addClass("active");
+	li.addClass("active")
+	tab.parent && this.options.autoClose && li.parent("ul").hide(100);
+	var curr = tab.parent;
+	while(curr){
+	    this.findLi(curr).addClass("active");
 	    curr = curr.parent;
 	}
-	afterActiveChanged(tab);
+	this.options.afterActiveChanged.call(this, tab);
     };
 
     var checkOption = function(options){
 	if(!options.tabs){
 	    throw ReferenceError("Config.tabs is required", "simple-navBar.js");
 	}
-	return checkTabs(options.tabs);
+	options.tabs = checkTabs(options.tabs);
     };
     /**To check the required field, the 'name' must exist and unique in it's level  **/
     var checkTabs = function(tabs){
 	var nameCache = [];
+	var legaled = [];
 	for(var i in tabs){
 	    if(!(tabs[i].name)){
 		throw ReferenceError("tab.name is required", "simple-navBar.js");
 	    }else if(nameCache.indexOf(tabs[i].name)>=0){
-		throw ReferenceError("tab.name ["+tabs[i].name+"]is duplicated", "simple-navBar.js");
+		console.warn("tab.name ["+tabs[i].name+"]is duplicated, second one will be ignored");
 	    }else{
+		var legal = $.extend({}, tabs[i]);
 		nameCache.push(tabs[i].name);
+		if(tabs[i].sub){
+		    legal.sub = checkTabs(tabs[i].sub);
+		}
+		legaled.push(legal);
 	    }
-	    if(tabs[i].sub){
-		checkTabs(tabs[i].sub);
-	    }
+	    
 	}
+	return legaled;
     };
     var empty = function(){};
     
     navBar.prototype.findbyName = function(name){
-	var seq = name.split(".");
-	return findTab.call(this, seq, 0 , this.tabs);
+	return !!(name) && findTab.call(this, name.split("."), 0 , this.tabs);
     };
     
     var findTab = function(name, level, tabArray){
@@ -260,6 +299,39 @@ if (typeof jQuery === 'undefined') {
 	    }
 	}
     };
+    
+    var addProcessor = function(){
+	var tabs;
+	Array.isArray(arguments[1]) ? tabs=arguments[1] : tabs=[arguments[1]];
+	parent = this.findConfigTab(arguments[2]);
+	if(parent){
+	    parent.sub = parent.sub || [];
+	    parent.sub.push.apply(parent.sub, tabs);
+	}else{
+	    this.options.tabs.push.apply(this.options.tabs, tabs);
+	}
+	this.init();
+    };
+    
+    var removeByName = function(tabs, names, predix){
+	for(var i in tabs){
+	    var tab = tabs[i];
+	    var tarname = predix?predix+"."+tab.name:tab.name;
+	    if(names.indexOf(tarname)>=0){
+		tabs.splice(i, 1);
+	    }else if(tab.sub){
+		removeByName(tab.sub, names, tab.name);
+	    }
+	}
+    }
+    var removeProcessor = function(){
+	var names;
+	Array.isArray(arguments[1]) ? names=arguments[1] : names=[arguments[1]];
+	removeByName(this.options.tabs, names);
+	this.init();
+    };
+    
+    
     var legalFunctions = {};
     Object.defineProperties(legalFunctions, {
 	'get':{
@@ -269,9 +341,9 @@ if (typeof jQuery === 'undefined') {
 	},'set':{
 	    //value: setProcessor,
 	},'add':{
-	    
+	    value: addProcessor,
 	}, 'remove':{
-	    
+	    value: removeProcessor,
 	}
     });
     var defaultOption = {
@@ -280,13 +352,15 @@ if (typeof jQuery === 'undefined') {
 	afterActiveChanged: empty,
 	autoClose: true,
 	route: true,
+	arrow: true,
+	pin: true,
+	horizon: true,
+	tabs: []
     };
     $.fn.navBar = function(){
 	var bar = this, navbar;
-	if(arguments.length === 1 && (typeof arguments[0]==='object'||arguments[0] === 'refresh')){
+	if(arguments.length === 0 || (typeof arguments[0]==='object'||arguments[0] === 'refresh')){
 	    var options = $.extend({element : $(this)}, defaultOption, arguments[0]);
-	    onActiveChange = options.onActiveChange; 
-	    afterActiveChanged = options.afterActiveChanged;
 	    $(this).addClass(options.style);
 	    navbar = new navBar(options);
 	    navbar.init();
@@ -305,7 +379,7 @@ if (typeof jQuery === 'undefined') {
 	    }
 	    
 	}
-	return navbar;
+	return $(this);
     };
     
     
