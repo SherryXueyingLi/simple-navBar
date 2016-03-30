@@ -12,7 +12,7 @@ To init it by function navBar();
 	$(element).navBar({options});
 
 
-The simple-navBar could support two style of navigation bars, horizontal and vertical, check on the demo [here](http://sherryxueyingli.github.io/simple-navBar/demo.html);
+The simple-navBar could support two style of navigation bars, horizontal and vertical, check on the demo [here](http://sherryxueyingli.github.io/simple-navBar/);
 
 ##Options
 all options are not mandatory, but I suggest at least set the tabs. otherwise you will get a empty navBar.
@@ -51,7 +51,7 @@ Example:
 
 ##Functions
 
-It could support add, remove, query, set active, and ..etc, check on the descriptions and demo [here](http://sherryxueyingli.github.io/simple-navBar/demo.html);
+It could support add, remove, query, set active, and ..etc, check on the descriptions and demo [here](http://sherryxueyingli.github.io/simple-navBar/);
 
 ## FYI
 css can be replaced anyway.
