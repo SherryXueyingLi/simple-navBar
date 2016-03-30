@@ -1,6 +1,6 @@
 ## Prepare
 
-The navBar is based on JQuery, so make sure it is imported before navBar.
+The simple-navBar is based on JQuery, so make sure it is imported before navBar.
 
 	<script src="src/lib/jquery.js"></script>
 	<script src="simple-navBar.js"></script>
@@ -12,11 +12,12 @@ To init it by function navBar();
 	$(element).navBar({options});
 
 
-The navBar could support two style of navigation bars, horizontal and vertical, check on the demo [here](http://sherryxueyingli.github.io/simple-navBar/demo.html);
+The simple-navBar could support two style of navigation bars, horizontal and vertical, check on the demo [here](http://sherryxueyingli.github.io/simple-navBar/);
 
 ##Options
 all options are not mandatory, but I suggest at least set the tabs. otherwise you will get a empty navBar.
-Note: vale inside a bracket is the default value.
+
+Note: value inside a bracket is the default value.
 
 **Tabs**
 Tabs([]): should be an array, the attribute 'name' is required, others are optional. 
@@ -32,13 +33,14 @@ Example:
 
 	var defaultMenu = [
 	{name : "document",label : "Documents",sub : [ {name : "start",label : "Quick Start"}, 
-		{name : "config",label : "Configure",href: "myconfigure"}, 
-		{name : "api",label : "APIs"}]},
+			{name : "config",label : "Configure",href: "myconfigure"}, 
+			{name : "api",label : "APIs"}]},
 	{name : "download",label : "Download"} ];`
 
 **Call backs**
 
-* onClick: function, will be called when a tab is click.
+* onClick(function), will be called when a tab is click, parameters are event, and the tab Object.
+
 
 ** Others**
 
@@ -49,7 +51,7 @@ Example:
 
 ##Functions
 
-It could support add, remove, query, set active, and ..etc, check on the demo [here](http://sherryxueyingli.github.io/simple-navBar/demo.html);
+It could support add, remove, query, set active, and ..etc, check on the descriptions and demo [here](http://sherryxueyingli.github.io/simple-navBar/);
 
 ## FYI
 css can be replaced anyway.

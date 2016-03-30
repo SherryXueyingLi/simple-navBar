@@ -36,6 +36,8 @@ var defaultMenu = [ {
 		horizon: false,
     });
 
+    $("#sideBar").navBar("add",{name: 'claim', label: 'Claim'});
+
     function getActive() {
 	var active = $("#nav").navBar("active");
 	$("#currentActive").text("Get: " + active.label+", Check the returned object in console.");
