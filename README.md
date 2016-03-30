@@ -42,7 +42,7 @@ Example:
 * onClick(function), will be called when a tab is click, parameters are event, and the tab Object.
 
 
-** Others**
+**Others**
 
 * autoClose(true): if a sub tab will close after one is clicked. 
 * arrow(true): If show the arrow when there's sub tabs.
