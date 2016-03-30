@@ -11,6 +11,17 @@ body {
 	font-family: Calibri, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	margin: 0px;
 }
+#download button{
+	padding: 20px;
+	margin: 20px;
+}
+
+#download a{
+	padding: 20px;
+	color: black;
+	text-decoration: none;
+    font-weight: bold;
+}
 
 .demoZone {
 	position: relative;
@@ -19,7 +30,11 @@ body {
 	border-radius: 3px;
 	margin: 5px;
 }
-
+#claim a {
+    color: #1e6bb8;
+    text-decoration: none;
+    font-weight: bold;
+}
 .codeZone {
 	position: relative;
 	background-color: #f7f7f9;
@@ -36,19 +51,24 @@ body {
 }
 
 button {
-	background-color: white;
+	background-color: #A8CCF7;
 	border-radius: 5px;
 	border: solid 1px #B5B1B1;
-	padding: 5px;
+	padding: 10px;
+	color: #1F4473;
 }
 
 button:active {
-	background-color: #E8F3F0;
+	background-color: #84B6F3;
 }
 
-button:focus {
-	border: solid 1px C7C7C7;
+button:focus{
+	outline:none;
 }
+button:hover{
+	background-color: #BBD6F7;
+}
+
 #sideBar{
 	display: inline-block; 
 	position: relative; 
@@ -67,6 +87,13 @@ button:focus {
 #sideBar li.navBar.active>a {
 	color: #F3B27A;
 }
+#board{
+	position: relative;
+	top:50px;
+	height: 100%; 
+	left: 0px; 
+	padding: 20px;
+}
 .demoTitle {
 	position: absolute; 
 	top:10px; 
@@ -80,9 +107,9 @@ button:focus {
 
 <body>
 	<div id="nav"><div class="demoTitle">Nav Bar Demo</div></div>
-	<div class="board" style="position: relative; height: 100%; left: 0px; padding: 20px;">
-		<div style="height: 100%; overflow: auto;">
-			<div id="sideBar" style="">
+	<div id="board">
+		<div style="height: 100%;">
+			<div id="sideBar">
 			<div style="top:10px; font-weight:bold; padding-left: 10px;">Side Bar Demo</div>
 			</div>
 			<div id="route" style="display: inline-block; position: relative; left:20%; width: 78%; height: 100%; float: left; ">
@@ -201,8 +228,19 @@ button:focus {
 						</div>
 					</div>
 				</div>
-				<div id="download" style="height: 500px;">
+				<div id="download">
 				<h1>Download</h1>
+				 <button><a href="https://github.com/SherryXueyingLi/simple-navBar" class="btn">View on GitHub</a>
+      			 </button>
+      			 <button><a href="https://github.com/SherryXueyingLi/simple-navBar/zipball/master" class="btn">Download .zip</a>
+      			 </button>
+      			 <button><a href="https://github.com/SherryXueyingLi/simple-navBar/tarball/master" class="btn">Download .tar.gz</a>
+				 </button>
+				</div>
+				<div id="claim" style="padding-bottom: 30px;">
+				<h1>Claim</h1>
+				<span style="font-size: 1.3em;">
+				<a href="https://github.com/SherryXueyingLi/simple-navBar">Simple-navbar</a> is maintained by <a href="https://github.com/SherryXueyingLi">SherryXueyingLi</a>.</span>
 				</div>
 			</div>
 
