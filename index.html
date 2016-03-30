@@ -51,7 +51,7 @@ body {
 }
 
 button {
-	background-color: #A8CCF7;
+	background-color: #C6E4F3;
 	border-radius: 5px;
 	border: solid 1px #B5B1B1;
 	padding: 10px;
@@ -59,14 +59,14 @@ button {
 }
 
 button:active {
-	background-color: #84B6F3;
+	background-color: #DEE0E2;
 }
 
 button:focus{
 	outline:none;
 }
 button:hover{
-	background-color: #BBD6F7;
+	background-color: #DEF1FB;
 }
 
 #sideBar{
@@ -102,6 +102,10 @@ button:hover{
 	padding-left: 5%;
 	display: inline-block;
 }
+table, tbody, thead, td{
+	border: solid 1px #B5B1B1;
+	border-collapse: collapse;
+}
 </style>
 </head>
 
@@ -134,6 +138,60 @@ button:hover{
 				</div>
 				<div id="myconfigure" style="height: 100%;padding: 20px;">
 				<h1>Configure</h1>
+				<div class="demoZone">
+					<pre>Currently, all the options are optional, but I suggest at least set the tabs. otherwise you will get a empty navBar.</pre>
+					<table>
+						<thead><tr>
+							<td>Properity Name</td>
+							<td>Default Value</td>
+							<td>Description</td>
+							</tr>
+						</thead>
+						<tbody><tr>
+							<td>tabs</td>
+							<td>[]</td>
+							<td>Should be a array of objects, in these objects, the following properties are supported.
+								<ul>
+								<li>name: used for identify the tab;</li>
+								<li>label: the text shown on menu, if not set, will be same with name.</li>
+								<li>path: a folder path, if you are using angular.js, it will be useful.</li>
+								<li>viewPath: a folder path, if you are using angular.js, it will be useful.</li>
+								<li>href: used to set the 'href' of the element, if not set, same with name, if in second level, it will be parent's name +'-'+name.</li>
+								<li>sub: should be an array, to save sub tabs if current tab, sub tab's structure same the Tabs.</li>
+								</ul>
+								<p>Example: </p>
+								<pre><code>var defaultMenu = [
+	{name : "document",label : "Documents",sub : [
+		{name : "start",label : "Quick Start"}, 
+		{name : "config",label : "Configure",href: "myconfigure"}, 
+		{name : "api",label : "APIs"}]},
+	{name : "download",label : "Download"} ];
+								</code></pre>
+							</td>
+							</tr>
+							<tr>
+							<td>autoClose</td>
+							<td>true</td>
+							<td>If true, the sub tab will closed after user click, like nav bar demo.</td>
+							</tr>
+							<tr>
+							<td>arrow</td>
+							<td>true</td>
+							<td>If true, there will be an arrow next to menu title for those who have sub tabs, like nav bar demo</td>
+							</tr>
+							<tr>
+							<td>pin</td>
+							<td>true</td>
+							<td>If true, the navigation bar will be pined to window, the position is relative the the parent node.</td>
+							</tr>
+							<tr>
+							<td>horizon</td>
+							<td>true</td>
+							<td>If true, the menu will be shown in-line, like nav bar demo.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				</div>
 				<div id="document-api" style="height: 100%;padding: 20px;">
 				<h1>Javascript API</h1>
