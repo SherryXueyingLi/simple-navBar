@@ -1,86 +1,16 @@
 
-/*nav bar position define*/
-.navDiv{
-	background-color: #305F86;
-	color: white;
-	height: 50px;
-	margin: 0px;
-	font-size: 1.1em;
-	width: 100%;
-	top: 0;
-	left: 0;
-	border-radius: 4px;
-	z-index: 999;
-}
 ul.navUl{
 	margin: 0px;
     position: relative;
     height: 100%;
     left: 15%;
+    padding: 0px;
 }
 ul.navUl ul.navUl{
 	position: relative;
 	left:0px;
 }
-ul.navUl ul.navUl.autoClose{
-	left: 0%;
-	top: 102%;
-	z-index: 999;
-	display: none;
-	position: absolute;
-	padding: 0px;
-}
-/*nav bar list padding & style define*/
-.navDiv .navUl li{
-	list-style: none;
-	display: inline-block;
-	height: 100%;
-	position: relative;
-}
-/*nav bar first level's menu span style*/
-.navDiv li.navBarli_0>a{
-	top: 25%;
-}
 
-/*nav bar all level's hover&active style*/
-.navDiv li.navBar>a:hover{
-	cursor: pointer;
-	color: #F5C588;
-}
-.navDiv .navBar>a{
-	color: white;
-	text-decoration: none;
-	position: relative;
-	margin-left: 25px;
-	margin-right: 25px;
-	width:100%;
-	height:30px;
-}
-.navDiv li.navBar.active>a{
-	color: #F3B27A;
-}
-/*
-second level bar.
-*/
-
-
-.navDiv li.navBarli_1{
-	display: block;
-	position: relative;
-	height: 30px;
-	background-color: #305F86;
-	width: 100%;
-}
-.navDiv li.navBarli_1:first-child{
-	border-radius: 4px 4px 0px 0px;
-}
-.navDiv li.navBarli_1:last-child{
-	border-radius: 0px 0px 4px 4px;
-}
-.navDiv li.navBarli_1>a{
-	display: block;
-	top:5%;
-}
 .arrowDown{
 	width: 0; 
 	height: 0; 
@@ -92,4 +22,136 @@ second level bar.
     left: 103%;
     top: 50%;
 }
+ul.navUl li.navBar>a:hover{
+	cursor: pointer;
+}
+
+/*nav bar position define*/
+.navbar{
+	background-color: #305F86;
+	color: white;
+	height: 50px;
+	margin: 0px;
+	font-size: 1.1em;
+	width: 100%;
+	top: 0;
+	left: 0;
+	border-radius: 4px;
+	z-index: 999;
+}
+/*nav bar list padding & style define*/
+.navbar li{
+	list-style: none;
+	display: inline-block;
+	height: 100%;
+	position: relative;
+}
+/*nav bar first level's menu span style*/
+.navbar li.navBarli_0>a{
+	top: 25%;
+}
+
+/*nav bar all level's hover&active style*/
+.navbar li.navBar>a:hover{
+	cursor: pointer;
+	color: #F5C588;
+}
+.navbar li>ul.navUl.autoClose{
+	left: 0%;
+	top: 102%;
+	z-index: 999;
+	display: none;
+	position: absolute;
+	padding: 0px;
+}
+.navbar .navBar>a{
+	color: white;
+	text-decoration: none;
+	position: relative;
+	margin-left: 25px;
+	margin-right: 25px;
+	width:100%;
+	height:30px;
+}
+.navbar li.navBar.active>a{
+	color: #F3B27A;
+}
+/*
+second level bar.
+*/
+.navbar li.navBarli_1{
+	display: block;
+	position: relative;
+	height: 30px;
+	background-color: #305F86;
+	width: 100%;
+}
+.navbar li.navBarli_1:first-child{
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+.navbar li.navBarli_1:last-child{
+	border-bottom-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+.navbar li.navBarli_1>a{
+	display: block;
+	top:5%;
+}
+/*side bar default define*/
+.sidebar li{
+	list-style: none;
+	padding: 0px;
+}
+.sidebar li>ul{
+	padding: 2px;
+	padding-left: 10%;
+}
+.sidebar li>a{
+	padding-left: 10px;
+	color: gray;
+	text-decoration: none;
+}
+.sidebar li.active>a{
+	color: #818DE8;
+	border-left: 3px solid #8989EC;;
+}
+/*menu bar default define*/
+.menubar{
+	list-style: none;
+	padding: 0px;
+	background-color: #272742;
+	height: 100%;
+	box-shadow: 2px 0px 9px #080808;
+	overflow: hidden;
+}
+.menubar li{
+	padding-top: 8px;
+	padding-bottom: 8px;
+	list-style: none;
+}
+.menubar li:hover{
+	background-color:#393961
+}
+.menubar li li:hover{
+	background-color:#252527
+}
+
+.menubar ul{
+	left: 0;
+}
+.menubar ul ul{
+	margin-top: 8px;
+	box-shadow: 0px 3px 12px #080808 inset;
+	background-color: #1B1A1A;
+}
+.menubar li>a{
+	color: #D8D6D6;
+	text-decoration: none;
+	padding-bottom: 8px;
+}
+.menubar li.active>a{
+	color: #818DE8;
+}
+
 

@@ -71,13 +71,6 @@ button:hover{
 	width: 20%; 
 	float: left;
 }
-#sideBar li>a {
-	color: gray;
-	text-decoration: none;
-}
-#sideBar li.navBar.active>a {
-	color: #F3B27A;
-}
 #board{
 	position: relative;
 	top:50px;
@@ -90,7 +83,7 @@ button:hover{
 	top:10px; 
 	font-weight:bold; 
 	font-size:1.3em; 
-	padding-left: 5%;
+	padding-left: 3%;
 	display: inline-block;
 }
 table, tbody, thead, td{
@@ -103,14 +96,21 @@ table, tbody, thead, td{
 <body>
 	<div id="nav"><div class="demoTitle">Nav Bar Demo</div></div>
 	<div id="board">
-		<div style="height: 100%;">
-			<div id="sideBar">
-			<div style="top:10px; font-weight:bold; padding-left: 10px;">Side Bar Demo</div>
+			<div id="sideBar" style="padding-top:30px;">
+				<div style="top:10px; font-weight:bold; padding-left: 10px;">Side Bar Demo</div>
+			</div>
+			<div style="position: fixed; top: 50%;font-weight:bold; padding-left: 10px;">Menu Bar Demo Widget</div>
+			<div id="menuBar" style="position: fixed;top: 50%; left:0; width: 10%; height: 30%; over-flow: hiden">
+			
 			</div>
 			<div id="route" style="display: inline-block; position: relative; left:20%; width: 78%; height: 100%; float: left; ">
 				<div id="document-start" style="height: 100%;padding: 20px;">
-				<h1>What is this for</h1>
-				<pre>I have no idea, just for fun I guess.</pre>
+				<h1>Introduction</h1>
+				<ul><li>To help you build a navigation bar by just configure a little.</li>
+				<li>Interface for routing is available.</li>
+				<li>Self designed css is supported</li>
+				</ul>
+				<pre>Check the demos around the page.</pre>
 				</div>
 				<div id="document-start" style="height: 100%;padding: 20px;">
 				<h1>Quick Start</h1>
@@ -292,8 +292,6 @@ table, tbody, thead, td{
 				<a href="https://github.com/SherryXueyingLi/simple-navBar">Simple-navbar</a> is maintained by <a href="https://github.com/SherryXueyingLi">SherryXueyingLi</a>.</span>
 				</div>
 			</div>
-
-		</div>
 	</div>
 </body>
 <script src="funcs.js"></script>

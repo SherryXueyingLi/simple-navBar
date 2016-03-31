@@ -5,7 +5,6 @@ if (typeof jQuery === 'undefined') {
 	if($.fn.navBar !== undefined){
 		return;
 	}
-	//var options, tabs, onClick, active, onActiveChange, afterActiveChanged; 
 	var tabObject = function(name, label, parent, path, viewPath, href){
 	var  children = [];
 	var addChild = function(child){
@@ -19,31 +18,31 @@ if (typeof jQuery === 'undefined') {
 	};
 	Object.defineProperties(this,{
 		'name':{
-		value: name,
+			value: name,
 		},'label':{
-		value: label || name
+			value: label || name
 		},'parent':{
-		value:parent
+			value:parent
 		},'controllerPath':{
-		get: function(){
-			return path || this.code.split("-").join("/")+"/controller";
-		}
-		}, 'url':{
-		get: function(){
-			return this.code.split("-").join("/")
-		}
-		},'children':{
-		get: function(){
-			return children;
-		}
-		},'code':{
-		get: function() {
-			var state = name, up = parent;
-			while(up){
-				state = up.name+'-'+state;
-				up = up.parent;
+			get: function(){
+				return path || this.code.split("-").join("/")+"/controller";
 			}
-			return state;
+		}, 'url':{
+			get: function(){
+				return this.code.split("-").join("/")
+			}
+		},'children':{
+			get: function(){
+				return children;
+			}
+		},'code':{
+			get: function() {
+				var state = name, up = parent;
+				while(up){
+					state = up.name+'-'+state;
+					up = up.parent;
+				}
+				return state;
 			}
 		},'state':{
 		get: function(){
@@ -54,11 +53,11 @@ if (typeof jQuery === 'undefined') {
 			return view || this.code.split("-").join("/")+"/view";
 		}
 		},'addChild':{
-		value: addChild
+			value: addChild
 		},'href':{
-		get: function() {
-			return href || this.code;
-		}
+			get: function() {
+				return href || this.code;
+			}
 		},
 	});
 	
@@ -68,34 +67,40 @@ if (typeof jQuery === 'undefined') {
 	 * Construct the tabs from JSON structure to tabObject
 	 */
 	var processTab = function(tabArray, parent){
-	var tabs = [];
-	for(var i in tabArray){
-		var tab = new tabObject(tabArray[i].name, tabArray[i].label, parent, tabArray[i].path, tabArray[i].view, tabArray[i].href);
-		tabs.push(tab);
-		if(tabArray[i].sub && tabArray[i].sub.length>0){
-		var subs = processTab(tabArray[i].sub, tab);
-		tab.addChild(subs);
+		var tabs = [];
+		for(var i in tabArray){
+			var tab = new tabObject(tabArray[i].name, tabArray[i].label, parent, tabArray[i].path, tabArray[i].view, tabArray[i].href);
+			tabs.push(tab);
+			if(tabArray[i].sub && tabArray[i].sub.length>0){
+				var subs = processTab(tabArray[i].sub, tab);
+				tab.addChild(subs);
+			}
 		}
-	}
-	return tabs;
+		return tabs;
 	};
 	
 	var currentLevel = 0;
 	var buildContext = function(){
-	currentLevel = 0;
-	$(this.options.element).children("ul.navUl").detach();
-	var ul = buildUl.call(this,  this.tabs).appendTo($(this.options.element));
-	ul.css("")
+		currentLevel = 0;
+		var children=this.options.element.children;
+		for(var i in children){
+			if(children[i].tagName === "UL" && children[i].classList.contains("navUl")){
+				this.options.element.removeChild(children[i]);
+			}
+		}
+		this.options.element.appendChild(buildUl.call(this,  this.tabs));
 	};
 	
 	var buildUl = function(tabs){
-	var ul = document.createElement("ul");
-	ul.classList.add("navBar_"+currentLevel, "navUl");
-	for(var i in tabs){
-		createLi.call(this, tabs[i]).appendTo($(ul));
-	}
-	this.options.autoClose && tabs[0].parent &&ul.classList.add("autoClose");
-	return $(ul);
+		var ul = document.createElement("ul");
+		ul.classList.add("navBar_"+currentLevel, "navUl");
+		for(var i in tabs){
+			tabs[i].span = createLi.call(this, tabs[i]);
+			ul.appendChild(tabs[i].span);
+		}
+		this.options.autoClose && tabs[0].parent &&ul.classList.add("autoClose");
+		(currentLevel >=1 && this.options.closed) && (ul.style.display='none');
+		return ul;
 	}
 	
 	var createLi = function(tab){
@@ -103,19 +108,25 @@ if (typeof jQuery === 'undefined') {
 		li.classList.add("navBarli_"+currentLevel, "navBar");
 		li.setAttribute("navCode", tab.code);
 		var span = document.createElement("a"), self=this;
-		$(span).appendTo($(li));
+		li.appendChild(span);
 		span.text=tab.label;
 		this.options.route && span.setAttribute("href","#"+tab.href);
 		span.onclick = function($event){
 			stateClickCallback.call(self, $event, tab);
 		};
+		if(this.options.center){
+			var liw = li.style.width;
+			var spanw = span.style.width;
+			span.style.marginLeft=(liw-spanw)/2+'px';
+			li.setAttribute("align", "center");
+		}
 		if(tab.children.length>0){
-			this.options.arrow && $(span).append($(arrowDownElement()));
+			this.options.arrow && span.appendChild(arrowDownElement());
 			currentLevel++;
-			buildUl.call(this, tab.children).appendTo($(li));
+			li.appendChild(buildUl.call(this, tab.children));
 			currentLevel--;
 		}
-		return $(li);
+		return li;
 	};
 	
 	var arrowDownElement = function(){
@@ -131,7 +142,7 @@ if (typeof jQuery === 'undefined') {
 	var findActive = function(tabs){
 		if(!tabs) return;
 		for(var i in tabs){
-			if(this.findLi(tabs[i]).hasClass("active")){
+			if(this.findLi(tabs[i]).classList.contains("active")){
 				return findActive.call(this, tabs[i].children) || tabs[i];
 			}
 		}
@@ -140,53 +151,75 @@ if (typeof jQuery === 'undefined') {
 	
 	var navBar = function(options){
 		var self = this, tabs, active, opt = options;
-		var $element = $(options.element);
-	
 		Object.defineProperties(this, {'options':{
-			get: function(){ return opt;}
-		},'tabs':{
-			get: function(){ return tabs;}
-		},'active':{
-			get: function(){
-				return findActive.call(this, this.tabs);
-			},
-		}
-	});
-	self.init = function(){
-		try{
-			checkOption(this.options);
-			tabs = processTab(this.options.tabs, null);
-			this.buildContext();
-			this.active = null;
-			if(this.options.active){
-				active = findTab.call(this, this.options.active);
+				get: function(){ return opt;}
+			},'tabs':{
+				get: function(){ return tabs;}
+			},'active':{
+				get: function(){
+					return findActive.call(this, this.tabs);
+				},
 			}
-			if(!active){
-				active = this.tabs[0];
-				while(active.children.length>0){
-				active = active.children[0];
+		});
+		self.init = function(){
+			try{
+				checkOption(this.options);
+				tabs = processTab(this.options.tabs, null);
+				this.buildContext();
+				this.active = null;
+				if(this.options.active){
+					active = findTab.call(this, this.options.active);
+				}
+				if(!active){
+					active = this.tabs[0];
+					while(active.children.length>0){
+						active = active.children[0];
+					}
+				}
+				this.setActive(active);
+				var disStyle = "block"; 
+				this.options.horizon && (disStyle="inline-block"); 
+				var lis = this.options.element.children;
+				for(var i=0; i<lis.length; i++){
+					if(lis[i].tagName.toLowerCase() === "li" && lis[i].classList.contains("navBar")){
+						lis[i].style.display=disStyle;
+					}
+				}
+				this.options.element.classList.add(this.options.theme);
+				$(this.options.element).data["navBar"] = this;//set element data attribute
+			}catch(e){
+				console.debug(e); 
 			}
+			if(this.options.pin) {
+				this.options.element.style.position = "fixed";
+				var offset = findOffset(this.options.element)
+				this.options.element.style.top = offset.top+"px";
+				this.options.element.style.left = offset.left+"px";
 			}
-			this.setActive(active);
-			this.options.horizon? $element.children().css("display","inline-block"):$element.children().css("display","block");
-			$element.data["navBar"] = this;//set element data attribute
-		}catch(e){
-			console.debug(e); 
 		}
-		if(this.options.pin) {
-			$element.css("position", "fixed");
-			$element.css("top", $element.parent().offset().top);
-			$element.css("left", $element.parent().offset().left);
-		}
-	}
 	};
+	
+	var findOffset =function (element){
+		var top = 0, left = 0, start = element;
+		while(start!=document.body){
+			top = top + start.offsetTop;
+			left = left + start.offsetLeft;
+			start = start.parentElement;
+		}
+		return {top: top, left: left};
+	}
 	
 	navBar.prototype.buildContext = function(){
 		buildContext.call(this);
 	};
 	
 	navBar.prototype.findLi = function(tab){
-		return $(this.options.element).find("li[navCode='"+tab.code+"']");
+		var lis = this.options.element.getElementsByTagName("li");
+		for(var i in lis){
+			if(lis[i].getAttribute("navCode") === tab.code){
+				return lis[i]
+			}
+		}
 	};
 	
 	navBar.prototype.findConfigTab = function(name){
@@ -207,6 +240,39 @@ if (typeof jQuery === 'undefined') {
 		}
 		return;
 	};
+	
+	var slideToggle = function(element){
+		if(element.style.display === 'none'){
+			slideDown(element);
+		}else{
+			slideUp(element);
+		}
+	};
+	
+	var slideDown = function(element){
+		element.style.display = 'block';
+		element.animate({
+			height: [ 0, element.style.height], // [ from, to ]
+		}, 10000);
+	};
+	
+	var  slideUp = function(element){
+		element.animate({
+			height: [ element.style.height, 0], 
+		}, 10000);
+		element.style.display = 'none';
+	};
+	
+	var closeAll = function(){
+		var lis = this.options.element.getElementsByTagName("li");
+		for(var i=0; i<lis.length; i++){
+			uls = lis[i].getElementsByTagName("ul");
+			for(var j=0; j<uls.length; j++){
+				uls[j].style.display="none";
+			}
+		}
+	};
+	
 	navBar.prototype.setActive = function(tab){
 		if(!tab){
 			throw ReferenceError("Active tab is required", "simple-navBar.js");
@@ -214,15 +280,21 @@ if (typeof jQuery === 'undefined') {
 		this.options.onActiveChange.call(this.active, tab);
 		var li = this.findLi(tab);
 		if(tab.children.length>0){
-			li.children("ul").slideToggle(100);
+			//li.children("ul").slideToggle(100);
+			slideToggle(li.getElementsByTagName("ul")[0]);
 			return;
 		}
-		$(this.options.element).find(".navBar").removeClass("active");
-		li.addClass("active")
-		tab.parent && this.options.autoClose && li.parent("ul").hide(100);
+		this.options.element.findElementBy
+		var activeli = this.options.element.getElementsByTagName("li");
+		for(var i=0; i<activeli.length; i++){
+			activeli[i].classList.remove("active");
+		}
+		li.classList.add("active");
+		tab.parent && this.options.autoClose && slideUp(li.parentElement);
+		this.options.autoClose&&closeAll.call(this);
 		var curr = tab.parent;
 		while(curr){
-			this.findLi(curr).addClass("active");
+			this.findLi(curr).classList.add("active");
 			curr = curr.parent;
 		}
 		this.options.afterActiveChanged.call(this, tab);
@@ -244,7 +316,7 @@ if (typeof jQuery === 'undefined') {
 		}else if(nameCache.indexOf(tabs[i].name)>=0){
 			console.warn("tab.name ["+tabs[i].name+"]is duplicated, second one will be ignored");
 		}else{
-			var legal = $.extend({}, tabs[i]);
+			var legal = JSON.parse(JSON.stringify(tabs[i]));
 			nameCache.push(tabs[i].name);
 		if(tabs[i].sub){
 			legal.sub = checkTabs(tabs[i].sub);
@@ -353,18 +425,24 @@ if (typeof jQuery === 'undefined') {
 		arrow: true,
 		pin: true,
 		horizon: true,
-		tabs: []
+		tabs: [],
+		theme: 'navbar',
+		closed: true,
+		center: false
 	};
 	$.fn.navBar = function(){
 		var bar = this, navbar;
 		if(arguments.length === 0 || (typeof arguments[0]==='object'||arguments[0] === 'refresh')){
-			var options = $.extend({element : $(this)}, defaultOption, arguments[0]);
+			if(arguments[0].horizon === false && arguments[0].theme === undefined){
+				defaultOption.theme = 'sidebar';
+			}
+			var options = $.extend({element : bar[0]}, defaultOption, arguments[0]);
 			$(this).addClass(options.style);
 			navbar = new navBar(options);
 			navbar.init();
 			$(this).data('navBar', navbar);
 			return navbar;
-		}else {
+		}else{
 			navbar = $(this).data('navBar');
 		}
 		if(arguments.length === 0){
