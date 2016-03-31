@@ -64,14 +64,21 @@ ul.navUl li.navBar>a:hover{
 	position: absolute;
 	padding: 0px;
 }
-.navbar .navBar>a{
+.navbar li>a{
 	color: white;
 	text-decoration: none;
 	position: relative;
 	margin-left: 25px;
 	margin-right: 25px;
 	width:100%;
-	height:30px;
+}
+.navbar li li{
+	padding-right: 15px;
+	padding-left: 15px;
+}
+.navbar li li>a{
+	margin: 0px;
+	padding: 0px;
 }
 .navbar li.navBar.active>a{
 	color: #F3B27A;

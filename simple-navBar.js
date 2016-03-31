@@ -1,10 +1,4 @@
-if (typeof jQuery === 'undefined') {
-  throw new Error('simple-navBar requires jQuery')
-}
-(function($){
-	if($.fn.navBar !== undefined){
-		return;
-	}
+(function(global){
 	var tabObject = function(name, label, parent, path, viewPath, href){
 	var  children = [];
 	var addChild = function(child){
@@ -90,7 +84,6 @@ if (typeof jQuery === 'undefined') {
 		}
 		this.options.element.appendChild(buildUl.call(this,  this.tabs));
 	};
-	
 	var buildUl = function(tabs){
 		var ul = document.createElement("ul");
 		ul.classList.add("navBar_"+currentLevel, "navUl");
@@ -117,7 +110,6 @@ if (typeof jQuery === 'undefined') {
 		if(this.options.center){
 			var liw = li.style.width;
 			var spanw = span.style.width;
-			span.style.marginLeft=(liw-spanw)/2+'px';
 			li.setAttribute("align", "center");
 		}
 		if(tab.children.length>0){
@@ -147,7 +139,120 @@ if (typeof jQuery === 'undefined') {
 			}
 		}
 		return;
-	}
+	};
+	var findLi = function(tab){
+		var lis = this.options.element.getElementsByTagName("li");
+		for(var i in lis){
+			if(lis[i].getAttribute("navCode") === tab.code){
+				return lis[i]
+			}
+		}
+	};
+	
+	var findConfigTab = function(name){
+		return name && findConfig.call(this, this.options.tabs, name.split("."), 0);
+	};
+	var findConfig = function(tabs, name, level){
+		if(level >= name.length || !tabs) return;
+		for(var i=0; i<tabs.length; i++){
+			if(tabs[i].name === name[level]){
+				if(level === name.length-1) return tabs[i];
+				return findConfig(tabs.sub, name, level+1);
+			}else{
+				var subs = findConfig(tabs.sub, name, level);
+				if(subs){
+					return subs;
+				}
+			} 
+		}
+		return;
+	};
+
+	var findOffset =function (element){
+		var top = 0, left = 0, start = element;
+		while(start!=document.body){
+			top = top + start.offsetTop;
+			left = left + start.offsetLeft;
+			start = start.parentElement;
+		}
+		return {top: top, left: left};
+	};
+
+	var slideToggle = function(element){
+		if(element.style.display === 'none'){
+			slideDown(element);
+		}else{
+			slideUp(element);
+		}
+	};
+	
+	var slideDown = function(element){
+		element.style.display = 'block';
+		element.animate({
+			height: [ 0, element.style.height], // [ from, to ]
+		}, 10000);
+	};
+	
+	var  slideUp = function(element){
+		element.animate({
+			height: [ element.style.height, 0], 
+		}, 10000);
+		element.style.display = 'none';
+	};
+	
+	var closeAll = function(){
+		var lis = this.options.element.getElementsByTagName("li");
+		for(var i=0; i<lis.length; i++){
+			uls = lis[i].getElementsByTagName("ul");
+			for(var j=0; j<uls.length; j++){
+				uls[j].style.display="none";
+			}
+		}
+	};
+
+	var setActive = function(tab){
+		if(!tab){
+			throw ReferenceError("Active tab is required", "simple-navBar.js");
+		}
+		this.options.onActiveChange.call(this.active, tab);
+		var li = this.findLi(tab);
+		if(tab.children.length>0){
+			//li.children("ul").slideToggle(100);
+			slideToggle(li.getElementsByTagName("ul")[0]);
+			return;
+		}
+		this.options.element.findElementBy
+		var activeli = this.options.element.getElementsByTagName("li");
+		for(var i=0; i<activeli.length; i++){
+			activeli[i].classList.remove("active");
+		}
+		li.classList.add("active");
+		tab.parent && this.options.autoClose && slideUp(li.parentElement);
+		this.options.autoClose&&closeAll.call(this);
+		var curr = tab.parent;
+		while(curr){
+			this.findLi(curr).classList.add("active");
+			curr = curr.parent;
+		}
+		this.options.afterActiveChanged.call(this, tab);
+	};
+	var findTab = function(name, level, tabArray){
+		if(level >= name.length || !tabArray) return;
+		for(var i=0; i<tabArray.length; i++){
+			if(tabArray[i].name === name[level]){
+				if(level === name.length-1) return tabArray[i];
+				return findTab(name, level+1, tabArray.children);
+			}else{
+				var subs = findTab(name, level, tabArray.children);
+				if(subs){
+					return subs;
+				}
+			}
+			
+		}
+		return;
+	};
+	
 	
 	var navBar = function(options){
 		var self = this, tabs, active, opt = options;
@@ -198,106 +303,15 @@ if (typeof jQuery === 'undefined') {
 			}
 		}
 	};
-	
-	var findOffset =function (element){
-		var top = 0, left = 0, start = element;
-		while(start!=document.body){
-			top = top + start.offsetTop;
-			left = left + start.offsetLeft;
-			start = start.parentElement;
-		}
-		return {top: top, left: left};
-	}
-	
-	navBar.prototype.buildContext = function(){
-		buildContext.call(this);
-	};
-	
-	navBar.prototype.findLi = function(tab){
-		var lis = this.options.element.getElementsByTagName("li");
-		for(var i in lis){
-			if(lis[i].getAttribute("navCode") === tab.code){
-				return lis[i]
-			}
-		}
-	};
-	
-	navBar.prototype.findConfigTab = function(name){
-		return name && findConfig.call(this, this.options.tabs, name.split("."), 0);
-	};
-	var findConfig = function(tabs, name, level){
-		if(level >= name.length || !tabs) return;
-		for(var i=0; i<tabs.length; i++){
-			if(tabs[i].name === name[level]){
-				if(level === name.length-1) return tabs[i];
-				return findConfig(tabs.sub, name, level+1);
-			}else{
-				var subs = findConfig(tabs.sub, name, level);
-				if(subs){
-					return subs;
-				}
-			} 
-		}
-		return;
-	};
-	
-	var slideToggle = function(element){
-		if(element.style.display === 'none'){
-			slideDown(element);
-		}else{
-			slideUp(element);
-		}
-	};
-	
-	var slideDown = function(element){
-		element.style.display = 'block';
-		element.animate({
-			height: [ 0, element.style.height], // [ from, to ]
-		}, 10000);
-	};
-	
-	var  slideUp = function(element){
-		element.animate({
-			height: [ element.style.height, 0], 
-		}, 10000);
-		element.style.display = 'none';
-	};
-	
-	var closeAll = function(){
-		var lis = this.options.element.getElementsByTagName("li");
-		for(var i=0; i<lis.length; i++){
-			uls = lis[i].getElementsByTagName("ul");
-			for(var j=0; j<uls.length; j++){
-				uls[j].style.display="none";
-			}
-		}
-	};
-	
-	navBar.prototype.setActive = function(tab){
-		if(!tab){
-			throw ReferenceError("Active tab is required", "simple-navBar.js");
-		}
-		this.options.onActiveChange.call(this.active, tab);
-		var li = this.findLi(tab);
-		if(tab.children.length>0){
-			//li.children("ul").slideToggle(100);
-			slideToggle(li.getElementsByTagName("ul")[0]);
-			return;
-		}
-		this.options.element.findElementBy
-		var activeli = this.options.element.getElementsByTagName("li");
-		for(var i=0; i<activeli.length; i++){
-			activeli[i].classList.remove("active");
-		}
-		li.classList.add("active");
-		tab.parent && this.options.autoClose && slideUp(li.parentElement);
-		this.options.autoClose&&closeAll.call(this);
-		var curr = tab.parent;
-		while(curr){
-			this.findLi(curr).classList.add("active");
-			curr = curr.parent;
-		}
-		this.options.afterActiveChanged.call(this, tab);
+
+	navBar.prototype ={
+		'buildContext' : buildContext,
+		'findLi': findLi,
+		'findConfigTab': findConfigTab,
+		'setActive' : setActive,
+		'findbyName' : function(name){
+			return !!(name) && findTab.call(this, name.split("."), 0 , this.tabs);
+		},
 	};
 
 	var checkOption = function(options){
@@ -328,35 +342,7 @@ if (typeof jQuery === 'undefined') {
 	return legaled;
 	};
 	var empty = function(){};
-	
-	navBar.prototype.findbyName = function(name){
-		return !!(name) && findTab.call(this, name.split("."), 0 , this.tabs);
-	};
-	
-	var findTab = function(name, level, tabArray){
-		if(level >= name.length || !tabArray) return;
-		for(var i=0; i<tabArray.length; i++){
-			if(tabArray[i].name === name[level]){
-				if(level === name.length-1) return tabArray[i];
-				return findTab(name, level+1, tabArray.children);
-			}else{
-				var subs = findTab(name, level, tabArray.children);
-				if(subs){
-					return subs;
-				}
-			}
-			
-		}
-		return;
-	};
-	
-	var getProcessor = function(){
-		// by default, it will return the active tabObject.
-		if(arguments.length === 1){
-			return this.active;
-		}
-		return findbyName(arguments[1]);
-	};
+
 	var activeProcessor = function(){
 		if(arguments.length===1){
 			return this.active;
@@ -368,54 +354,7 @@ if (typeof jQuery === 'undefined') {
 			}
 		}
 	};
-	
-	var addProcessor = function(){
-		var tabs;
-		Array.isArray(arguments[1]) ? tabs=arguments[1] : tabs=[arguments[1]];
-		parent = this.findConfigTab(arguments[2]);
-		if(parent){
-			parent.sub = parent.sub || [];
-			parent.sub.push.apply(parent.sub, tabs);
-		}else{
-			this.options.tabs.push.apply(this.options.tabs, tabs);
-		}
-		this.init();
-	};
-	
-	var removeByName = function(tabs, names, predix){
-		return tabs.filter(function(tab){
-			var tarname = predix?predix+"."+tab.name:tab.name;
-			if(names.indexOf(tarname)>=0){
-				return false;
-			}
-			if(tab.sub){
-				tab.sub = removeByName(tab.sub, names, tab.name);
-			}
-			return true;
-		});
-	}
-	var removeProcessor = function(){
-		var names;
-		Array.isArray(arguments[1]) ? names=arguments[1] : names=[arguments[1]];
-		this.options.tabs = removeByName(this.options.tabs, names);
-		this.init();
-	};
-	
-	
-	var legalFunctions = {};
-	Object.defineProperties(legalFunctions, {
-		'get':{
-			value: getProcessor,
-		},'active':{
-			value: activeProcessor,
-		},'set':{
-			//value: setProcessor,
-		},'add':{
-			value: addProcessor,
-		}, 'remove':{
-			value: removeProcessor,
-		}
-	});
+
 	var defaultOption = {
 		onClick: empty,
 		onActiveChange: empty,
@@ -428,35 +367,97 @@ if (typeof jQuery === 'undefined') {
 		tabs: [],
 		theme: 'navbar',
 		closed: true,
-		center: false
+		center: false,
+		element: undefined,
 	};
-	$.fn.navBar = function(){
-		var bar = this, navbar;
-		if(arguments.length === 0 || (typeof arguments[0]==='object'||arguments[0] === 'refresh')){
+	var copyOption = function(options) { 
+        var rt = {};
+        for(var key in defaultOption){
+        	if(options[key] !== undefined){
+        		rt[key] = options[key]
+        	}else{
+        		rt[key] = defaultOption[key];
+        	}
+        }
+
+        return rt; 
+    } 
+
+	var removeByName = function(tabs, names, predix){
+		return tabs.filter(function(tab){
+			var tarname = predix?predix+"."+tab.name:tab.name;
+			if(names.indexOf(tarname)>=0){
+				return false;
+			}
+			if(tab.sub){
+				tab.sub = removeByName(tab.sub, names, tab.name);
+			}
+			return true;
+		});
+	}
+
+	var simpleNavBar= function(){
+		if(arguments.length === 0 || typeof arguments[0]==='object'){
 			if(arguments[0].horizon === false && arguments[0].theme === undefined){
 				defaultOption.theme = 'sidebar';
 			}
-			var options = $.extend({element : bar[0]}, defaultOption, arguments[0]);
-			$(this).addClass(options.style);
-			navbar = new navBar(options);
-			navbar.init();
-			$(this).data('navBar', navbar);
-			return navbar;
-		}else{
-			navbar = $(this).data('navBar');
-		}
-		if(arguments.length === 0){
-			return navbar;
-		}else if(arguments.length>=1){
-			try{
-			return legalFunctions[arguments[0]] && legalFunctions[arguments[0]].apply(navbar, arguments);
-			}catch(e){
-			console.log(e);
+			var options = copyOption(arguments[0]);
+			if(typeof options.element==='string'){
+				options.element = document.getElementById(options.element);
 			}
-			
+			if(!options.element){
+				options.element = document.createElement("div");
+			}
+			options.element.classList.add(options.theme);
+			this.navbar = new navBar(options);
+			this.navbar.init();
 		}
-		return $(this);
+		
+		Object.defineProperties(this, {
+			'active': {
+				get: function(){
+					return this.navbar.active;
+				}
+			}, 'options':{
+				get: function(){
+					return this.navbar.options;
+				}
+			}
+		});
+
+		return this;
 	};
-	
-	
-}(jQuery));
+	simpleNavBar.prototype= {
+		getActive : function(){
+			return this.active;
+		},
+		setActive: function(name){
+			try{
+				var tab = this.navbar.findbyName(name);
+				this.navbar.setActive(tab);
+			}catch(e){
+				throw ReferenceError("Set Active failed. Cannot find tab by given name "+arguments[1], "simple-navBar.js");
+			}
+		}, remove: function(name){
+			var names;
+			Array.isArray(name) ? names=name : names=[name];
+			this.options.tabs = removeByName(this.options.tabs, names);
+			this.init();
+		}, init: function(){
+			this.navbar.init();
+		}, 'add': function(tabs, parent){
+			Array.isArray(tabs) || (tabs = [tabs]);
+			var parent = this.navbar.findConfigTab(parent);
+			if(parent){
+				parent.sub = parent.sub || [];
+				parent.sub.push.apply(parent.sub, tabs);
+			}else{
+				this.options.tabs.push.apply(this.options.tabs, tabs);
+			}
+			this.init();
+		},
+	};
+
+
+	global.simpleNavBar = simpleNavBar;
+})(window);
