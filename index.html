@@ -2,103 +2,11 @@
 <html>
 <head>
 <title>Menu Bar</title>
-<script src="src/lib/jquery.js"></script>
+<!-- <script src="src/lib/require.js" data-main="funcs"></script> -->
 <script src="simple-navBar.js"></script>
-
+<script src="src/lib/jquery.js"></script> 
 <link rel="stylesheet" type="text/css" href="stylesheets/navBar-menu.css"></link>
-<style type="text/css">
-body {
-	font-family: Calibri, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	margin: 0px;
-}
-#download button{
-	padding: 20px;
-	margin: 20px;
-}
-
-#download a{
-	padding: 20px;
-	color: black;
-	text-decoration: none;
-    font-weight: bold;
-}
-
-.demoZone {
-	position: relative;
-	top: 0;
-	padding: 10px;
-	border-radius: 3px;
-	margin: 5px;
-}
-#claim a {
-    color: #1e6bb8;
-    text-decoration: none;
-    font-weight: bold;
-}
-.codeZone {
-	position: relative;
-	background-color: #f7f7f9;
-    border: 1px solid #e1e1e8;
-    border-radius: 4px;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-.demoZone>.funcZone {
-	width: 100%;
-	background-color: white;
-	margin-bottom: 5px;
-}
-
-button {
-	background-color: #C6E4F3;
-	border-radius: 5px;
-	border: solid 1px #B5B1B1;
-	padding: 10px;
-	color: #1F4473;
-}
-
-button:active {
-	background-color: #DEE0E2;
-}
-
-button:focus{
-	outline:none;
-}
-button:hover{
-	background-color: #DEF1FB;
-}
-
-#sideBar{
-	display: inline-block; 
-	position: relative; 
-	left: 0; 
-	top: 0; 
-	padding-left: 10px;
-	width: 20%; 
-	float: left;
-}
-
-#board{
-	position: relative;
-	top:50px;
-	height: 100%; 
-	left: 0px; 
-	padding: 20px;
-}
-.demoTitle {
-	position: absolute; 
-	top:10px; 
-	font-weight:bold; 
-	font-size:1.3em; 
-	padding-left: 3%;
-	display: inline-block;
-}
-table, tbody, thead, td{
-	border: solid 1px #B5B1B1;
-	border-collapse: collapse;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="stylesheets/site.css"></link>
 </head>
 
 <body>
@@ -122,16 +30,15 @@ table, tbody, thead, td{
 				</div>
 				<div id="document-start" style="height: 100%;padding: 20px;">
 				<h1>Quick Start</h1>
-				<pre>Import the simple-navBar.js and navBar-menu.css file, since nevbar is depends on jquery, please import it first</pre>
+				<pre>Import the simple-navBar.js and stylesheets/navBar-menu.css file</pre>
 				<div class="codeZone">
-					<pre>&lt;script src=&quot;src/lib/jquery.js&quot;&gt;&lt;/script&gt;</pre>
 					<pre>&lt;script src=&quot;simple-navBar.js&quot;&gt;&lt;/script&gt;</pre>
 					<pre>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;stylesheets/navBar-menu.css&quot;&gt;&lt;/link&gt;</pre>
 				</div>
-				<pre>Init the navBar by following $(youElement).navBar([options Object]): </pre>
+				<pre>Init the navBar by following new simpleNavBar([options Object]): </pre>
 				<pre>Check the options in Configure Section.</pre>
 				<div class="codeZone">
-					<pre>$(element).navBar({});</pre>
+					<pre>var menubar = new simpleNavBar({});</pre>
 				</div>
 				
 				</div>
@@ -146,7 +53,13 @@ table, tbody, thead, td{
 							<td>Description</td>
 							</tr>
 						</thead>
-						<tbody><tr>
+						<tbody>
+							<tr>
+							<td>element</td>
+							<td>undefined</td>
+							<td>Could be an Element object or a string which is the id of the element. If not set or the cannot find the element, will create a div DOM with specified id. If not set.</td>
+							</tr>
+							<tr>
 							<td>tabs</td>
 							<td>[]</td>
 							<td>Should be a array of objects, in these objects, the following properties are supported.
@@ -194,15 +107,17 @@ table, tbody, thead, td{
 				</div>
 				<div id="document-api" style="height: 100%;padding: 20px;">
 				<h1>Javascript API</h1>
+				<pre>All the api test target on the Nav Bar Demo of this webpage, the object of it is create by </pre>
+				<code>var nagbar = new simpleNavBar({[my own configures]})</code>
 					<div class="demoZone">
-						<h3>Set the active by script.</h3>
+						<h3>Set the active tab by script.</h3>
 						<div class="funcZone">
 							<div style="width: 100%; padding: 5px;">
 								<button onclick="setActive()">Set Download Active</button>
 							</div>
 						</div>
 						<div class="codeZone">
-							<pre>$(element).navBar("active","download");</pre>
+							<pre>navbar.setActive("download");</pre>
 						</div>
 					</div>
 					<div class="demoZone">
@@ -214,7 +129,8 @@ table, tbody, thead, td{
 							</div>
 						</div>
 						<div class="codeZone">
-							<pre>$(element).navBar("active");</pre>
+							<pre>navbar.getActive();</pre> or 
+							<pre>navbar.active;</pre>
 						</div>
 					</div>
 					<div class="demoZone">
@@ -226,17 +142,17 @@ table, tbody, thead, td{
 							</div>
 						</div>
 						<div class="codeZone">
-							<pre>$(element).navBar("add", {name: 'about', label:'About'});</pre>
+							<pre>navbar.add({name: 'about', label:'About'});</pre>
 						</div>
 						<div class="funcZone">
 							<div style="width: 100%; padding: 5px;">
 								<pre>Add a list of menu context</pre>
 								<pre>Note: Duplicated named object will be ignored.</pre>
-								<button onclick="addList()">Add About & Demo</button>
+								<button onclick="addList()">Add Docs & About</button>
 							</div>
 						</div>
 						<div class="codeZone">
-							<pre>$(element).navBar("add", [{name:'demo', label:'Demo'},{name: 'about', label:'About'}]);</pre>
+							<pre>navbar.add([{name:'docs', label:'Docs'},{name: 'about', label:'About'}]);</pre>
 						</div>
 						<div class="funcZone">
 							<div style="width: 100%; padding: 5px;">
@@ -246,7 +162,7 @@ table, tbody, thead, td{
 							</div>
 						</div>
 						<div class="codeZone">
-							<pre>$(element).navBar("add", [{name:'demo', label:'Demo'},{name: 'about', label:'About'}]);</pre>
+							<pre>navbar.add([{name:'me', label:'Me'},{name: 'team', label:'Team'}, 'about']);</pre>
 						</div>
 					</div>
 					<div class="demoZone">
@@ -258,30 +174,30 @@ table, tbody, thead, td{
 							</div>
 						</div>
 						<div class="codeZone">
-							<pre>$(element).navBar("remove", 'about');</pre>
+							<pre>navbar.remove('about');</pre>
 						</div>
 						<div class="funcZone">
 							<div style="width: 100%; padding: 5px;">
 								<pre>Remove a list of menu context</pre>
 								<pre>Note: If the context already dropped, it will be ignored.</pre>
 								<pre>Note: Please click 'Add List' in order to test.</pre>
-								<button onclick="removeList()">Remove About & Demo</button>
+								<button onclick="removeList()">Remove About & Docs</button>
 							</div>
 						</div>
 						<div class="codeZone">
-							<pre>$(element).navBar("remove", ['about', 'demo']);</pre>
+							<pre>navbar.remove(['about', 'docs']);</pre>
 						</div>
 						<div class="funcZone">
 							<div style="width: 100%; padding: 5px;">
 								<pre>Remove a list of menu context, with parent note indecated. </pre>
 								<pre>Note: Remove a sub option without indicating the parent name is allowed, but indecating parent name could be more secure</pre>
-								<pre>Note: Please click 'Add About & Demo' and 'Add to About' before test.</pre>
-								<button onclick="removeMe()">Remove Me&Demo</button>
+								<pre>Note: Please click 'Add About & Docs' and 'Add to About' before test.</pre>
+								<button onclick="removeMe()">Remove Me & Docs</button>
 							</div>
 						</div>
 						<div class="codeZone">
-							<pre>$(element).navBar("remove", ['about.me', 'demo']);</pre>
-							<pre>$(element).navBar("remove", ['me', 'demo']);</pre>
+							<pre>navbar.remove(['about.me', 'docs']);</pre>
+							<pre>navbar.remove(['me', 'docs']);</pre>
 						</div>
 					</div>
 				</div>
@@ -303,7 +219,4 @@ table, tbody, thead, td{
 	</div>
 </body>
 <script src="funcs.js"></script>
-<script type="text/javascript">
-
-</script>
 </html>

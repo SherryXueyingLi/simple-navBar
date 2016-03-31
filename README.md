@@ -1,12 +1,11 @@
 ## Prepare
 
-The simple-navBar is based on JQuery, so make sure it is imported before navBar.
+Import the simple-navBar.js, and stylsheets/navBar-menu.css
 
-	<script src="src/lib/jquery.js"></script>
 	<script src="simple-navBar.js"></script>
 	<link rel="stylesheet" type="text/css" href="stylesheets/navBar-menu.css"></link>
 
-To init it by function navBar();
+Init the navBar by following:
 
 
 	$(element).navBar({options});
@@ -43,7 +42,7 @@ Example:
 
 
 **Others**
-
+* element(undefined): Could be an Element object or a string which is the id of the element. If not set or the cannot find the element, will create a div DOM with specified id. If not set.
 * autoClose(true): if a sub tab will close after one is clicked. 
 * arrow(true): If show the arrow when there's sub tabs.
 * pin(true): If pin the navBar in screen. The position will be depend on it's parent DOM's position.

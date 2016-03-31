@@ -1,28 +1,40 @@
-var defaultMenu = [ {
+var navBarMenu = [ {
 	name : "main",label : "Main", path : "main/controller"}, 
-		{name : "document", label : "Documents", sub : [ 
-			{name : "start",label : "Quick Start"}, 
-			{name : "config", label : "Configure", href: "myconfigure"}, 
-			{name : "api", label : "APIs"} ]}, 
-	{name : "download", label : "Download"} ];
-$("#nav").navBar({
-		tabs : defaultMenu,
+		{name : "demo", label : "Demos", sub : [ 
+			{name : "navbar",label : "Nav Bar"}, 
+			{name : "sidebar", label : "Side Bar"}, 
+			{name : "menubar", label : "Menu Bar"},
+			{name : "diy", label : "DIY"} ]}, 
+	{name : "download", label : "Download"}];
+var navbar = new simpleNavBar({
+		element: "nav",
+		tabs : navBarMenu,
 		onClick : function($event, tab) {
 			console.log([$event, tab]);
 		},
 		route : false,
+		center: true
 });
-defaultMenu[0].label ="Introduction"
-defaultMenu.push({name: 'claim', label: 'Claim'})
-$("#sideBar").navBar({
-		tabs : defaultMenu,
+var sideBarMenu = [{
+	name : "main",label : "Introduction", path : "main/controller"}, 
+		{name : "document", label : "Documents", sub : [ 
+			{name : "start",label : "Quick Start"}, 
+			{name : "config", label : "Configure", href: "myconfigure"}, 
+			{name : "api", label : "APIs"} ]}, 
+	{name : "download", label : "Download"},
+	{name: 'claim', label: 'Claim'} ];
+
+var sidebar = new simpleNavBar({
+	element: "sideBar",
+		tabs : sideBarMenu,
 		autoClose : false,
 		arrow: false,
 		horizon: false,
 		closed: false,
 });
 
-$("#menuBar").navBar({
+var menubar = new simpleNavBar({
+	element: 'menuBar',
 	tabs: [
 	{name: 'github', label: 'Github'},
 	{name:'js', label:'Javascript', sub:[
@@ -45,35 +57,35 @@ $("#menuBar").navBar({
 	center: true
 });
 	function getActive() {
-		var active = $("#nav").navBar("active");
+		var active = navbar.active;
 		$("#currentActive").text("Get: " + active.label+", State is: "+active.state+", Check the returned object in console.");
 		console.log(["get active object: ", active]);
 	};
 
 	function setActive() {
-		var active = $("#nav").navBar("active", "download");
+		navbar.setActive("download");
 	};
 
 	function add() {
-		$("#nav").navBar("add", {name : 'about', label : 'About'});
+		navbar.add({name : 'about', label : 'About'});
 	};
 
 	function addList() {
-		$("#nav").navBar("add", [{ name : 'demo', label : 'Demo'},
+		navbar.add([{ name : 'docs', label : 'Docs'},
 			{name : 'about', label : 'About'}]);
 	};
 	
 	function addToAbout(){
-		$("#nav").navBar("add", [{name : 'me', label : 'Me'},
+		navbar.add([{name : 'me', label : 'Me'},
 			{name : 'team',label : 'Team'}], 'about');
 	};
 
 	function removeAbout() {
-		$("#nav").navBar("remove", "about");
+		navbar.remove("about");
 	};
 	function removeList() {
-		$("#nav").navBar("remove", ["about","demo"]);
+		navbar.remove(["about","docs"]);
 	};
 	function removeMe() {
-		$("#nav").navBar("remove", ["about.me", "demo"]);
+		navbar.remove(["about.me", "docs"]);
 	};
