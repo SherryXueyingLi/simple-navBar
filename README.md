@@ -8,7 +8,7 @@ Import the simple-navBar.js, and stylsheets/navBar-menu.css
 Init the navBar by following:
 
 
-	$(element).navBar({options});
+	var myBar = new simpleNavBar([options Object]):
 
 
 The simple-navBar could support two style of navigation bars, horizontal and vertical, check on the demo [here](http://sherryxueyingli.github.io/simple-navBar/);
