@@ -72,9 +72,8 @@ ul.navUl li.navBar>a:hover{
 	margin-right: 25px;
 	width:100%;
 }
-.navbar li li{
-	padding-right: 15px;
-	padding-left: 15px;
+.navbar ul ul{
+	width: 100%;
 }
 .navbar li li>a{
 	margin: 0px;
@@ -110,55 +109,72 @@ second level bar.
 	list-style: none;
 	padding: 0px;
 }
-.sidebar li>ul{
-	padding: 2px;
-	padding-left: 10%;
-}
+
 .sidebar li>a{
-	padding-left: 10px;
-	color: gray;
+	padding-left: 20px;
+	color: #655F5F;
 	text-decoration: none;
+}
+.sidebar li>a:hover{
+	color: #45A2DA;
+}
+.sidebar li li>a{
+	padding-left: 40px;
+}
+.sidebar li li.active>a{
+	padding-left: 38px;
 }
 .sidebar li.active>a{
 	color: #818DE8;
-	border-left: 3px solid #8989EC;;
+	padding-left: 18px;
+	border-left: 2px solid #8989EC;
 }
 /*menu bar default define*/
 .menubar{
 	list-style: none;
 	padding: 0px;
-	background-color: #272742;
+	background-color: #EDEDF1;
 	height: 100%;
 	box-shadow: 2px 0px 9px #080808;
 	overflow: hidden;
+	width: inherit;
+	font-size:1.3em;
 }
 .menubar li{
 	padding-top: 8px;
 	padding-bottom: 8px;
 	list-style: none;
 }
-.menubar li:hover{
-	background-color:#393961
+.menubar li:hover>a{
+	text-shadow: 0px 0px 3px #C3C0C0;
 }
 .menubar li li:hover{
-	background-color:#252527
+	text-shadow: 0px 0px 3px #A5A1A1
 }
-
 .menubar ul{
 	left: 0;
+	height: auto;
 }
 .menubar ul ul{
 	margin-top: 8px;
-	box-shadow: 0px 3px 12px #080808 inset;
-	background-color: #1B1A1A;
+    box-shadow: 0px 2px 9px #B9B6B6 inset;
+    background-color: #D3D3D8;
+    top: 8px;
 }
 .menubar li>a{
-	color: #D8D6D6;
+	color: #2C2C2D;
 	text-decoration: none;
 	padding-bottom: 8px;
+	padding-left: 3px;
 }
+.menubar li.active{
+	color: #2C2C2D;
+	border-left: solid 3px #C7C7C5;
+}
+
 .menubar li.active>a{
-	color: #818DE8;
+	padding-left: 0px;
+	
 }
 
 

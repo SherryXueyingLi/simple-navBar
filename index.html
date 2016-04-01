@@ -10,19 +10,22 @@
 </head>
 
 <body>
-	<div id="nav"><div class="demoTitle">Nav Bar Demo</div></div>
-	<div id="board">
-			<div id="sideBar" style="padding-top:30px;">
+	<div class="navbarWidget">
+	
+	<div id="nav" ><div class="demoTitle">Nav Bar Demo</div></div>
+	</div>
+	<div class="board">
+		<div class="sidebarWidget">
+			<div id="sideBar" style="padding-left:20px;">
 				<div style="top:10px; font-weight:bold; padding-left: 10px;">Side Bar Demo</div>
 			</div>
-			<div style="position: fixed; top: 50%;font-weight:bold; padding-left: 10px;">Menu Bar Demo Widget</div>
-			<div id="menuBar" style="position: fixed;top: 50%; left:0; width: 10%; height: 30%; over-flow: hiden">
+		</div>
 			
-			</div>
-			<div id="route" style="display: inline-block; position: relative; left:20%; width: 78%; height: 100%; float: left; ">
+			<div id="route" class="contentWidget" style=" ">
 				<div id="document-start" style="height: 100%;padding: 20px;">
 				<h1>Introduction</h1>
-				<ul><li>To help you build a navigation bar by just configure a little.</li>
+				<ul>
+				<li>To help you build a navigation bar with as less code as possible,so we can focus more on business requirements.</li>
 				<li>Interface for routing is available.</li>
 				<li>Self designed css is supported</li>
 				</ul>
@@ -100,6 +103,11 @@
 							<td>horizon</td>
 							<td>true</td>
 							<td>If true, the menu will be shown in-line, like nav bar demo.</td>
+							</tr>
+							<tr>
+							<td>mutex</td>
+							<td>true</td>
+							<td>If true, Opening one sub tab will close all other opened ones.</td>
 							</tr>
 						</tbody>
 					</table>

@@ -50,7 +50,9 @@
 			value: addChild
 		},'href':{
 			get: function() {
-				return href || this.code;
+				if(href && (href.indexOf("#") === 0 ||  href.indexOf("/") >=0)) return href;
+				else if(href) return "#"+href;
+				else return "#"+this.code;
 			}
 		},
 	});
@@ -82,7 +84,8 @@
 				this.options.element.removeChild(children[i]);
 			}
 		}
-		this.options.element.appendChild(buildUl.call(this,  this.tabs));
+		var ul = buildUl.call(this,  this.tabs);
+		this.options.element.appendChild(ul);
 	};
 	var buildUl = function(tabs){
 		var ul = document.createElement("ul");
@@ -91,6 +94,7 @@
 			tabs[i].span = createLi.call(this, tabs[i]);
 			ul.appendChild(tabs[i].span);
 		}
+		(!(this.options.horizon) || currentLevel>0) && (ul.style.overflowY="hidden");
 		this.options.autoClose && tabs[0].parent &&ul.classList.add("autoClose");
 		(currentLevel >=1 && this.options.closed) && (ul.style.display='none');
 		return ul;
@@ -103,7 +107,7 @@
 		var span = document.createElement("a"), self=this;
 		li.appendChild(span);
 		span.text=tab.label;
-		this.options.route && span.setAttribute("href","#"+tab.href);
+		this.options.route && (tab.children.length===0)  && span.setAttribute("href", tab.href);
 		span.onclick = function($event){
 			stateClickCallback.call(self, $event, tab);
 		};
@@ -167,13 +171,15 @@
 		}
 		return;
 	};
-
+	
 	var findOffset =function (element){
 		var top = 0, left = 0, start = element;
-		while(start!=document.body){
-			top = top + start.offsetTop;
-			left = left + start.offsetLeft;
-			start = start.parentElement;
+		var actualTop = element.offsetTop;
+		var current = element.parentElement;
+		while (current !== null){
+			left += current.offsetLeft;
+			top += current.offsetTop;
+			current = current.offsetParent;
 		}
 		return {top: top, left: left};
 	};
@@ -187,17 +193,22 @@
 	};
 	
 	var slideDown = function(element){
-		element.style.display = 'block';
-		element.animate({
-			height: [ 0, element.style.height], // [ from, to ]
-		}, 10000);
+		element.style.height="0px";
+		element.style.display="block";
+		setTimeout(function(){
+			element.style.height=element.scrollHeight+"px";
+			element.style.overflow="";
+		}, 150);
+		element.animate([{height: '0px'},{height: element.scrollHeight+"px"}], 150);
 	};
 	
 	var  slideUp = function(element){
-		element.animate({
-			height: [ element.style.height, 0], 
-		}, 10000);
-		element.style.display = 'none';
+		element.style.overflow="hidden";
+		setTimeout(function(){
+			element.style.display = 'none';
+			
+		}, 150);
+		element.animate([{height: element.scrollHeight+"px"},{height: '0px'}], 150);
 	};
 	
 	var closeAll = function(){
@@ -218,10 +229,15 @@
 		var li = this.findLi(tab);
 		if(tab.children.length>0){
 			//li.children("ul").slideToggle(100);
+			var lis = this.options.element.getElementsByTagName("li");
+			for(var i=0; i<lis.length; i++){
+				if(lis[i]!=li && lis[i].getElementsByTagName("ul").length>0){
+					slideUp(lis[i].getElementsByTagName("ul")[0]);
+				}
+			}
 			slideToggle(li.getElementsByTagName("ul")[0]);
 			return;
 		}
-		this.options.element.findElementBy
 		var activeli = this.options.element.getElementsByTagName("li");
 		for(var i=0; i<activeli.length; i++){
 			activeli[i].classList.remove("active");
@@ -300,6 +316,7 @@
 				var offset = findOffset(this.options.element)
 				this.options.element.style.top = offset.top+"px";
 				this.options.element.style.left = offset.left+"px";
+				this.options.element.style.width="inherit";
 			}
 		}
 	};
@@ -369,6 +386,9 @@
 		closed: true,
 		center: false,
 		element: undefined,
+		scrollNav: true,
+		navTarget: undefined,
+		mutex: true
 	};
 	var copyOption = function(options) { 
         var rt = {};
@@ -394,8 +414,14 @@
 			}
 			return true;
 		});
-	}
-
+	};
+	
+	var setAutoNavigation = function(target){
+		target.onscroll = function(){
+			
+		}
+	};
+	
 	var simpleNavBar= function(){
 		if(arguments.length === 0 || typeof arguments[0]==='object'){
 			if(arguments[0].horizon === false && arguments[0].theme === undefined){
@@ -408,9 +434,18 @@
 			if(!options.element){
 				options.element = document.createElement("div");
 			}
+			if(typeof options.navTarget==='string'){
+				options.navTarget = document.getElementById(options.navTarget);
+			}
+			if(!options.navTarget){
+				options.navTarget = document.body;
+			}
+			
 			options.element.classList.add(options.theme);
+			
 			this.navbar = new navBar(options);
 			this.navbar.init();
+			options.scrollNav && setAutoNavigation.call(this.navbar, options.navTarget);
 		}
 		
 		Object.defineProperties(this, {
