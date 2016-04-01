@@ -3,7 +3,7 @@ var navBarMenu = [ {
 		{name : "demo", label : "Demos", sub : [ 
 			{name : "navbar",label : "Nav Bar"}, 
 			{name : "sidebar", label : "Side Bar"}, 
-			{name : "menubar", label : "Menu Bar"},
+			{name : "menubar", label : "Menu Bar", href:"demos/menubar.html"},
 			{name : "diy", label : "DIY"} ]}, 
 	{name : "download", label : "Download"}];
 var navbar = new simpleNavBar({
@@ -12,7 +12,7 @@ var navbar = new simpleNavBar({
 		onClick : function($event, tab) {
 			console.log([$event, tab]);
 		},
-		route : false,
+		route : true,
 		center: true
 });
 var sideBarMenu = [{
@@ -31,31 +31,10 @@ var sidebar = new simpleNavBar({
 		arrow: false,
 		horizon: false,
 		closed: false,
+		mutex: false
 });
 
-var menubar = new simpleNavBar({
-	element: 'menuBar',
-	tabs: [
-	{name: 'github', label: 'Github'},
-	{name:'js', label:'Javascript', sub:[
-		{name: 'kt', label: 'Knockout'},
-		{name: 'angular', label: 'AngularJs'},
-		{name: 'require', label: 'RequireJs'},
-		{name: 'jquery', label: 'JQuery'},
-		{name: 'boot', label: 'Bootstrapper'}]},
-	{name: 'css', label:'CSS'},
-	{name: 'html', label:'HTML'},
-	{name: 'script', label:'Scripts', sub:[
-		{name:'python', label: 'Python'},
-		{name:'php', label:'PHP'}]
-	}],
-	route : false,
-	theme : 'menubar',
-	arrow: false,
-	autoClose : true,
-	horizon: false,
-	center: true
-});
+
 	function getActive() {
 		var active = navbar.active;
 		$("#currentActive").text("Get: " + active.label+", State is: "+active.state+", Check the returned object in console.");
