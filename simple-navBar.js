@@ -1,5 +1,5 @@
 (function(global){
-	var tabObject = function(name, label, parent, path, viewPath, href){
+	var tabObject = function(name, label, parent, path, viewPath, href, icon){
 	var  children = [];
 	var addChild = function(child){
 		if(child instanceof tabObject){
@@ -48,6 +48,8 @@
 		}
 		},'addChild':{
 			value: addChild
+		},'icon':{
+			value: icon
 		},'href':{
 			get: function() {
 				if(href && (href.indexOf("#") === 0 ||  href.indexOf("/") >=0)) return href;
@@ -86,6 +88,7 @@
 		}
 		var ul = buildUl.call(this,  this.tabs);
 		this.options.element.appendChild(ul);
+		return ul;
 	};
 	var buildUl = function(tabs){
 		var ul = document.createElement("ul");
@@ -219,6 +222,9 @@
 				uls[j].style.display="none";
 			}
 		}
+		if(this.options.type ==='float' && this.options.element.style.display!=="none"){
+			toggleMenu.call(this, this.handbar);
+		}
 	};
 
 	var setActive = function(tab){
@@ -269,6 +275,60 @@
 		return;
 	};
 	
+	var createCross = function(color){
+		var a = document.createElement("div");
+		a.classList.add("crossRemove");
+		return a;
+	};
+	
+	var toggleMenu = function(div){
+		var element = this.options.element;
+		if(element.style.display==="none"){
+			slideLeft(element, div);
+		}else{
+			slideRight(element, div);
+		}
+	};
+	
+	var  slideLeft = function(element, div){
+		var originalleft = element.style.left;
+		element.style.left=window.innerWidth+"px";
+		element.style.display="block";
+		setTimeout(function(){
+			element.style.left=originalleft;
+			element.style.overflow="";
+			div.classList.remove("menuIcon");
+			div.appendChild(createCross());
+		}, 150);
+		element.animate([{left: window.innerWidth+"px"},{left: originalleft}], 150);
+	};
+	
+	var  slideRight = function(element, div){
+		var originalleft = element.style.left;
+		element.style.overflow="hidden";
+		setTimeout(function(){
+			element.style.display = 'none';
+			element.style.left=originalleft;
+			div.classList.add("menuIcon");
+			div.removeChild(div.children[0]);
+		}, 150);
+		element.animate([{left: originalleft},{left: window.innerWidth+"px"}], 150);
+	}
+	
+	var creatBar = function(){
+		var div = document.createElement("div");
+		div.classList.add("menuIcon");
+		div.align="center";
+		div.style.cursor="pointer";
+		div.style.width="25px";
+		div.style.padding="5px";
+		div.style.position = "fixed";
+		div.style.backgroundColor = "#EDEDF1";
+		div.style.left = window.innerWidth-100 +"px";
+		div.style.top = window.innerHeight-100 +"px";
+		div.onclick = toggleMenu.bind(this, div);
+		return div;
+	};
 	
 	var navBar = function(options){
 		var self = this, tabs, active, opt = options;
@@ -286,7 +346,12 @@
 			try{
 				checkOption(this.options);
 				tabs = processTab(this.options.tabs, null);
-				this.buildContext();
+				var ul = this.buildContext();
+				if(this.options.type === 'float'){
+					this.handbar = creatBar.call(this);
+					document.body.appendChild(this.handbar);
+					this.options.element.style.display="none";
+				}
 				this.active = null;
 				if(this.options.active){
 					active = findTab.call(this, this.options.active);
@@ -376,20 +441,49 @@
 		onClick: empty,
 		onActiveChange: empty,
 		afterActiveChanged: empty,
-		autoClose: true,
 		route: true,
-		arrow: true,
-		pin: true,
-		horizon: true,
 		tabs: [],
-		theme: 'navbar',
-		closed: true,
-		center: false,
 		element: undefined,
-		scrollNav: true,
 		navTarget: undefined,
-		mutex: true
+		type: 'nav'||'side'||'float'
 	};
+	
+	var legalType = ['nav','side','float'];
+	
+	var typeDefault = {
+		'nav': {
+			horizon: true,
+			pin: true,
+			theme: 'navbar',
+			closed: true,
+			mutex: true,
+			arrow: true,
+			autoClose: true,
+			center: true
+		},
+		'side':{
+			horizon: false,
+			pin: true,
+			theme: 'sidebar',
+			closed: false,
+			mutex: true,
+			arrow: false,
+			autoClose: false,
+			center: false
+		},
+		'float':{
+			horizon: false,
+			pin: true,
+			theme: 'floatbar',
+			closed: false,
+			mutex: true,
+			arrow: false,
+			autoClose: true,
+			center: true
+		}
+	};
+	
+	
 	var copyOption = function(options) { 
         var rt = {};
         for(var key in defaultOption){
@@ -399,9 +493,17 @@
         		rt[key] = defaultOption[key];
         	}
         }
+        var typeOption = typeDefault[options['type']];
+        for(var key in typeOption){
+        	if(options[key] !== undefined){
+        		rt[key] = options[key]
+        	}else{
+        		rt[key] = typeOption[key];
+        	}
+        }
 
         return rt; 
-    } 
+    }; 
 
 	var removeByName = function(tabs, names, predix){
 		return tabs.filter(function(tab){
@@ -456,6 +558,10 @@
 			}, 'options':{
 				get: function(){
 					return this.navbar.options;
+				}
+			}, 'element':{
+				get: function(){
+					return this.navbar.options.element;
 				}
 			}
 		});
