@@ -6,8 +6,4 @@
   	"name" : "Sherry Li",
   	"email" : "SherryXueying.Li@aliyun.com"
   },
-  
-  "dependencies": {
-      "jquery": ">1.7.2",
-   }
 }

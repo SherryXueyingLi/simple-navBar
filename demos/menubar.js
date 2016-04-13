@@ -26,12 +26,7 @@ var menubar = new simpleNavBar({
 		{name:'python', label: 'Python'},
 		{name:'php', label:'PHP'}]
 	}],
-	route : false,
-	theme : 'menubar',
-	arrow: false,
-	autoClose : true,
-	horizon: false,
-	center: true,
+	type: 'float',
 	onClick: menubarOnClick
 });
 

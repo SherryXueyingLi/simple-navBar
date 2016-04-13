@@ -12,8 +12,8 @@ var navbar = new simpleNavBar({
 		onClick : function($event, tab) {
 			console.log([$event, tab]);
 		},
-		route : true,
-		center: true
+		center: true,
+		type:'nav'
 });
 var sideBarMenu = [{
 	name : "main",label : "Introduction", path : "main/controller"}, 
@@ -27,11 +27,7 @@ var sideBarMenu = [{
 var sidebar = new simpleNavBar({
 	element: "sideBar",
 		tabs : sideBarMenu,
-		autoClose : false,
-		arrow: false,
-		horizon: false,
-		closed: false,
-		mutex: false
+		type:'side'
 });
 
 

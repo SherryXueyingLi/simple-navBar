@@ -130,7 +130,7 @@ second level bar.
 	border-left: 2px solid #8989EC;
 }
 /*menu bar default define*/
-.menubar{
+.floatbar{
 	list-style: none;
 	padding: 0px;
 	background-color: #EDEDF1;
@@ -140,41 +140,77 @@ second level bar.
 	width: inherit;
 	font-size:1.3em;
 }
-.menubar li{
+.floatbar li{
 	padding-top: 8px;
 	padding-bottom: 8px;
 	list-style: none;
 }
-.menubar li:hover>a{
+.floatbar li:hover>a{
 	text-shadow: 0px 0px 3px #C3C0C0;
 }
-.menubar li li:hover{
+.floatbar li li:hover{
 	text-shadow: 0px 0px 3px #A5A1A1
 }
-.menubar ul{
+.floatbar ul{
 	left: 0;
 	height: auto;
 }
-.menubar ul ul{
+.floatbar ul ul{
 	margin-top: 8px;
     box-shadow: 0px 2px 9px #B9B6B6 inset;
     background-color: #D3D3D8;
     top: 8px;
 }
-.menubar li>a{
+.floatbar li>a{
 	color: #2C2C2D;
 	text-decoration: none;
 	padding-bottom: 8px;
 	padding-left: 3px;
 }
-.menubar li.active{
+.floatbar li.active, .floatbar li.active li.active{
 	color: #2C2C2D;
-	border-left: solid 3px #C7C7C5;
+	font-weight: bold;
+}
+.floatbar li.active li{
+	color: #2C2C2D;
+	font-weight: normal;
 }
 
-.menubar li.active>a{
+.floatbar li.active>a{
 	padding-left: 0px;
 	
+}
+.crossRemove{
+	display:inline-block; 
+	width: 20px; 
+	height: 4px; 
+	background: #939698; 
+	font-size: 0; 
+	line-height: 0;
+	vertical-align: middle;
+	-webkit-transform: rotate(45deg);
+}
+.crossRemove:after { 
+	content:'.'; 
+	display:block; 
+	width: 20px; 
+	height:4px; 
+	background: #939698;
+	-webkit-transform: rotate(-90deg);
+}
+
+.menuIcon:before{
+	content:''; 
+	display:block; 
+	height: 3px;
+	border-top: solid 4px #939698;
+}
+.menuIcon:after{
+	content:''; 
+	display:block; 
+	border-top: solid 4px #939698;
+	border-bottom: solid 4px #939698;
+	padding-top: 3px;
 }
 
 
