@@ -14,12 +14,16 @@
 	
 	<div id="nav" ><div class="demoTitle">Nav Bar Demo</div></div>
 	</div>
+	<div class="menubarWidget">
+		<div id="menuBar" style="padding-top:15%"></div>
+		</div>
 	<div class="board">
 		<div class="sidebarWidget">
 			<div id="sideBar" style="padding-left:20px;">
 				<div style="top:10px; font-weight:bold; padding-left: 10px;">Side Bar Demo</div>
 			</div>
 		</div>
+		
 			
 			<div id="route" class="contentWidget" style=" ">
 				<div id="document-start" style="height: 100%;padding: 20px;">
@@ -44,6 +48,45 @@
 					<pre>var menubar = new simpleNavBar({});</pre>
 				</div>
 				
+				<h2>'nav' Mood</h2>
+				<div class="funcZone">
+						<pre>nav Mood is like the menu banner in the top of this page. </pre>
+				</div>
+				<div class="codeZone">
+					<pre>var navbar = new simpleNavBar({
+    element: "nav",
+    tabs : navBarMenu, // predefined array, like tabs example in Configure section.
+    onClick : function($event, tab) {
+        console.log([$event, tab]);
+    },
+    center: true,
+    type:'nav'
+});</pre>
+				</div>
+				
+				<h2>'side' Mood</h2>
+				<div class="funcZone">
+					<pre>side Mood is like the content index in the left side of this page. </pre>
+				</div>
+				<div class="codeZone">
+					<pre>var sidebar = new simpleNavBar({
+    element: "side",
+    tabs : navBarMenu, // predefined array, like tabs example in Configure section.
+    type:'side'
+});</pre>
+				</div>
+				
+				<h2>'float' Mood</h2>
+				<div class="funcZone">
+					<pre>float Mood demo is in right-bottom side of this page, there is a menu button. </pre>
+				</div>
+				<div class="codeZone">
+					<pre>var menuBar = new simpleNavBar({
+    element: "menuBar",
+    tabs : navBarMenu, // predefined array, like tabs example in Configure section.
+    type:'float'
+});</pre>
+				</div>
 				</div>
 				<div id="myconfigure" style="height: 100%;padding: 20px;">
 				<h1>Configure</h1>
@@ -85,28 +128,43 @@
 							</td>
 							</tr>
 							<tr>
+							<td>type</td>
+							<td>'nav'</td>
+							<td>Only three strings accepted, 'nav','side','float', these three navigation moods are all shown in this page.</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<h2>Other Options</h2>
+					<div class="funcZone">
+						<pre>Following options default value is based on type. </pre>
+					</div>
+					
+					<table>
+						<thead><tr>
+							<td>Properity Name</td>
+							<td>Description</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
 							<td>autoClose</td>
-							<td>true</td>
 							<td>If true, the sub tab will closed after user click, like nav bar demo.</td>
 							</tr>
 							<tr>
 							<td>arrow</td>
-							<td>true</td>
 							<td>If true, there will be an arrow next to menu title for those who have sub tabs, like nav bar demo</td>
 							</tr>
 							<tr>
 							<td>pin</td>
-							<td>true</td>
 							<td>If true, the navigation bar will be pined to window, the position is relative the the parent node.</td>
 							</tr>
 							<tr>
 							<td>horizon</td>
-							<td>true</td>
 							<td>If true, the menu will be shown in-line, like nav bar demo.</td>
 							</tr>
 							<tr>
 							<td>mutex</td>
-							<td>true</td>
 							<td>If true, Opening one sub tab will close all other opened ones.</td>
 							</tr>
 						</tbody>
@@ -208,6 +266,15 @@
 							<pre>navbar.remove(['me', 'docs']);</pre>
 						</div>
 					</div>
+				</div>
+				<div id="demo-menubar">
+					<h3>Menu Bar Demo Page Blackboard</h3>
+					<div class="funcZone">
+							<pre>Find the menu bar in right-bottom cornor</pre>
+					</div>
+					<div class="codeZone" style="height: 300px;"id="blackboard">
+					</div>
+				
 				</div>
 				<div id="download">
 				<h1>Download</h1>

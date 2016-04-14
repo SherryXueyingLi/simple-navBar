@@ -3,7 +3,7 @@ var navBarMenu = [ {
 		{name : "demo", label : "Demos", sub : [ 
 			{name : "navbar",label : "Nav Bar"}, 
 			{name : "sidebar", label : "Side Bar"}, 
-			{name : "menubar", label : "Menu Bar", href:"demos/menubar.html"},
+			{name : "menubar", label : "Menu Bar"},
 			{name : "diy", label : "DIY"} ]}, 
 	{name : "download", label : "Download"}];
 var navbar = new simpleNavBar({
@@ -29,6 +29,39 @@ var sidebar = new simpleNavBar({
 		tabs : sideBarMenu,
 		type:'side'
 });
+
+var menubarOnClick = function($event, tabObj){
+	var e = document.createElement("pre");
+	e.textContent = "You just clicked "+tabObj.label;
+	document.getElementById("blackboard").appendChild(e);
+	setTimeout(function(){
+		setTimeout(function(){
+			e.remove();
+		}, 900);
+		e.animate([{opacity: 1},{opacity: 0}],1000);
+	}, 4000);
+};
+
+var menubar = new simpleNavBar({
+	element: 'menuBar',
+	tabs: [
+	{name: 'github', label: 'Github', href:"https://github.com/SherryXueyingLi/simple-navBar"},
+	{name:'js', label:'Javascript', sub:[
+		{name: 'kt', label: 'Knockout'},
+		{name: 'angular', label: 'AngularJs'},
+		{name: 'require', label: 'RequireJs'},
+		{name: 'jquery', label: 'JQuery'},
+		{name: 'boot', label: 'Bootstrapper'}]},
+	{name: 'css', label:'CSS'},
+	{name: 'html', label:'HTML'},
+	{name: 'script', label:'Scripts', sub:[
+		{name:'python', label: 'Python'},
+		{name:'php', label:'PHP'}]
+	}],
+	type: 'float',
+	onClick: menubarOnClick
+});
+
 
 
 	function getActive() {

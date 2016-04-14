@@ -275,57 +275,97 @@
 		return;
 	};
 	
-	var createCross = function(color){
-		var a = document.createElement("div");
-		a.classList.add("crossRemove");
-		return a;
+	var createRow = function(color){
+		var div = document.createElement("div");
+		div.style.position="relative";
+		var top=0;
+		for(var i=0; i<4; i++){
+			var a = document.createElement("div");
+			a.style.borderTop="solid 3px #939698";
+			a.style.position = "absolute";
+			a.style.width = "15px";
+			a.style.left = "0px";
+			a.style.display = "inline-block";
+			a.style.top = top+"px";
+			if(i!=1) top=top+5;
+			div.appendChild(a);
+		}
+		div.style.height="15px";
+		div.style.width="15px";
+		div.style.margin="0px";
+		return div;
 	};
 	
 	var toggleMenu = function(div){
 		var element = this.options.element;
 		if(element.style.display==="none"){
 			slideLeft(element, div);
+			toCross(div.children[0]);
 		}else{
 			slideRight(element, div);
+			toRows(div.children[0]);
 		}
 	};
 	
-	var  slideLeft = function(element, div){
+	var toCross = function(div){
+		setTimeout(function(){
+			div.children[1].style.WebkitTransform="rotate(45deg)";
+			div.children[0].style.opacity="0";
+			div.children[3].style.opacity="0";
+			div.children[2].style.WebkitTransform="rotate(-45deg)";
+		}, 150);
+		div.children[1].animate([{WebkitTransform: 'rotate(0deg)'},{WebkitTransform: 'rotate(45deg)'}], 150);
+		div.children[0].animate([{opacity: '1'},{opacity: '0'}], 150);
+		div.children[3].animate([{opacity: '1'},{opacity: '0'}], 150);
+		div.children[2].animate([{WebkitTransform: 'rotate(0deg)'},{WebkitTransform: 'rotate(-45deg)'}], 150);
+	};
+	
+	var toRows = function(div){
+		setTimeout(function(){
+			div.children[1].style.WebkitTransform=null;
+			div.children[0].style.opacity="1";
+			div.children[3].style.opacity="1";
+			div.children[2].style.WebkitTransform=null;
+		}, 150);
+		div.children[1].animate([{WebkitTransform: 'rotate(45deg)'},{WebkitTransform: 'rotate(0deg)'}], 150);
+		div.children[0].animate([{opacity: '0'},{opacity: '1'}], 150);
+		div.children[3].animate([{opacity: '0'},{opacity: '1'}], 150);
+		div.children[2].animate([{WebkitTransform: 'rotate(-45deg)'},{WebkitTransform: 'rotate(0deg)'}], 150);
+	};
+	
+	var  slideLeft = function(element){
 		var originalleft = element.style.left;
 		element.style.left=window.innerWidth+"px";
 		element.style.display="block";
 		setTimeout(function(){
 			element.style.left=originalleft;
 			element.style.overflow="";
-			div.classList.remove("menuIcon");
-			div.appendChild(createCross());
 		}, 150);
 		element.animate([{left: window.innerWidth+"px"},{left: originalleft}], 150);
 	};
 	
-	var  slideRight = function(element, div){
+	var  slideRight = function(element){
 		var originalleft = element.style.left;
 		element.style.overflow="hidden";
 		setTimeout(function(){
 			element.style.display = 'none';
 			element.style.left=originalleft;
-			div.classList.add("menuIcon");
-			div.removeChild(div.children[0]);
 		}, 150);
 		element.animate([{left: originalleft},{left: window.innerWidth+"px"}], 150);
 	}
 	
 	var creatBar = function(){
 		var div = document.createElement("div");
-		div.classList.add("menuIcon");
 		div.align="center";
 		div.style.cursor="pointer";
-		div.style.width="25px";
+		div.style.width="20px";
 		div.style.padding="5px";
 		div.style.position = "fixed";
 		div.style.backgroundColor = "#EDEDF1";
+		div.style.zIndex = "999";
 		div.style.left = window.innerWidth-100 +"px";
 		div.style.top = window.innerHeight-100 +"px";
+		div.appendChild(createRow("#939698"));
 		div.onclick = toggleMenu.bind(this, div);
 		return div;
 	};
@@ -544,7 +584,7 @@
 			}
 			
 			options.element.classList.add(options.theme);
-			
+			options.element.style.zIndex="998";
 			this.navbar = new navBar(options);
 			this.navbar.init();
 			options.scrollNav && setAutoNavigation.call(this.navbar, options.navTarget);
