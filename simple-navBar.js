@@ -201,17 +201,17 @@
 		setTimeout(function(){
 			element.style.height=element.scrollHeight+"px";
 			element.style.overflow="";
-		}, 150);
-		element.animate([{height: '0px'},{height: element.scrollHeight+"px"}], 150);
+		}, 180);
+		element.animate([{height: '0px'},{height: element.scrollHeight+"px"}], 200);
+		
 	};
 	
 	var  slideUp = function(element){
 		element.style.overflow="hidden";
 		setTimeout(function(){
 			element.style.display = 'none';
-			
-		}, 150);
-		element.animate([{height: element.scrollHeight+"px"},{height: '0px'}], 150);
+		}, 180);
+		element.animate([{height: element.scrollHeight+"px"},{height: '0px'}], 200);
 	};
 	
 	var closeAll = function(){
@@ -308,39 +308,33 @@
 	};
 	
 	var toCross = function(div){
-		setTimeout(function(){
-			div.children[1].style.WebkitTransform="rotate(45deg)";
-			div.children[0].style.opacity="0";
-			div.children[3].style.opacity="0";
-			div.children[2].style.WebkitTransform="rotate(-45deg)";
-		}, 150);
-		div.children[1].animate([{WebkitTransform: 'rotate(0deg)'},{WebkitTransform: 'rotate(45deg)'}], 150);
-		div.children[0].animate([{opacity: '1'},{opacity: '0'}], 150);
-		div.children[3].animate([{opacity: '1'},{opacity: '0'}], 150);
-		div.children[2].animate([{WebkitTransform: 'rotate(0deg)'},{WebkitTransform: 'rotate(-45deg)'}], 150);
+		div.children[1].style.WebkitTransform="rotate(45deg)";
+		div.children[0].style.opacity="0";
+		div.children[3].style.opacity="0";
+		div.children[2].style.WebkitTransform="rotate(-45deg)";
+		div.children[1].animate([{WebkitTransform: 'rotate(0deg)'},{WebkitTransform: 'rotate(45deg)'}], 200);
+		div.children[0].animate([{opacity: '1'},{opacity: '0'}], 200);
+		div.children[3].animate([{opacity: '1'},{opacity: '0'}], 200);
+		div.children[2].animate([{WebkitTransform: 'rotate(0deg)'},{WebkitTransform: 'rotate(-45deg)'}], 200);
 	};
 	
 	var toRows = function(div){
-		setTimeout(function(){
-			div.children[1].style.WebkitTransform=null;
-			div.children[0].style.opacity="1";
-			div.children[3].style.opacity="1";
-			div.children[2].style.WebkitTransform=null;
-		}, 150);
-		div.children[1].animate([{WebkitTransform: 'rotate(45deg)'},{WebkitTransform: 'rotate(0deg)'}], 150);
-		div.children[0].animate([{opacity: '0'},{opacity: '1'}], 150);
-		div.children[3].animate([{opacity: '0'},{opacity: '1'}], 150);
-		div.children[2].animate([{WebkitTransform: 'rotate(-45deg)'},{WebkitTransform: 'rotate(0deg)'}], 150);
+		div.children[1].animate([{WebkitTransform: 'rotate(45deg)'},{WebkitTransform: 'rotate(0deg)'}], 200);
+		div.children[0].animate([{opacity: '0'},{opacity: '1'}], 200);
+		div.children[3].animate([{opacity: '0'},{opacity: '1'}], 200);
+		div.children[2].animate([{WebkitTransform: 'rotate(-45deg)'},{WebkitTransform: 'rotate(0deg)'}], 200);
+		div.children[1].style.WebkitTransform=null;
+		div.children[0].style.opacity="1";
+		div.children[3].style.opacity="1";
+		div.children[2].style.WebkitTransform=null;
 	};
 	
 	var  slideLeft = function(element){
 		var originalleft = element.style.left;
 		element.style.left=window.innerWidth+"px";
 		element.style.display="block";
-		setTimeout(function(){
-			element.style.left=originalleft;
-			element.style.overflow="";
-		}, 150);
+		element.style.left=originalleft;
+		element.style.overflow="";
 		element.animate([{left: window.innerWidth+"px"},{left: originalleft}], 150);
 	};
 	
@@ -351,7 +345,7 @@
 			element.style.display = 'none';
 			element.style.left=originalleft;
 		}, 150);
-		element.animate([{left: originalleft},{left: window.innerWidth+"px"}], 150);
+		element.animate([{left: originalleft},{left: window.innerWidth+"px"}], 200);
 	}
 	
 	var creatBar = function(){

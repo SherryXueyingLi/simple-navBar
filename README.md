@@ -1,15 +1,21 @@
+##DEMO AND APIS:
+
+check [here](http://sherryxueyingli.github.io/simple-navBar/).
+
 ## Prepare
 
 Import the simple-navBar.js, and stylsheets/navBar-menu.css
 
+```javascript
 	<script src="simple-navBar.js"></script>
 	<link rel="stylesheet" type="text/css" href="stylesheets/navBar-menu.css"></link>
+```
 
 Init the navBar by following:
 
-
+```javascript
 	var myBar = new simpleNavBar([options Object]):
-
+```
 
 The simple-navBar could support two style of navigation bars, horizontal and vertical, check on the demo [here](http://sherryxueyingli.github.io/simple-navBar/);
 
@@ -30,11 +36,13 @@ Tabs([]): should be an array, the attribute 'name' is required, others are optio
 
 Example: 
 
+```javascript
 	var defaultMenu = [
 	{name : "document",label : "Documents",sub : [ {name : "start",label : "Quick Start"}, 
 			{name : "config",label : "Configure",href: "myconfigure"}, 
 			{name : "api",label : "APIs"}]},
 	{name : "download",label : "Download"} ];`
+```
 
 **Call backs**
 
