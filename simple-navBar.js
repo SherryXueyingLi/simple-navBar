@@ -202,6 +202,7 @@
 			element.style.height=element.scrollHeight+"px";
 			element.style.overflow="";
 		}, 180);
+		
 		element.animate([{height: '0px'},{height: element.scrollHeight+"px"}], 200);
 		
 	};
@@ -212,6 +213,7 @@
 			element.style.display = 'none';
 		}, 180);
 		element.animate([{height: element.scrollHeight+"px"},{height: '0px'}], 200);
+		
 	};
 	
 	var closeAll = function(){
@@ -222,7 +224,7 @@
 				uls[j].style.display="none";
 			}
 		}
-		if(this.options.type ==='float' && this.options.element.style.display!=="none"){
+		if(this.options.type ==='float' && this.options.element.style.left!==window.innerWidth+"px"){
 			toggleMenu.call(this, this.handbar);
 		}
 	};
@@ -298,7 +300,7 @@
 	
 	var toggleMenu = function(div){
 		var element = this.options.element;
-		if(element.style.display==="none"){
+		if(element.style.left===window.innerWidth+"px"){
 			slideLeft(element, div);
 			toCross(div.children[0]);
 		}else{
@@ -333,19 +335,32 @@
 		var originalleft = element.style.left;
 		element.style.left=window.innerWidth+"px";
 		element.style.display="block";
-		element.style.left=originalleft;
-		element.style.overflow="";
-		element.animate([{left: window.innerWidth+"px"},{left: originalleft}], 150);
+		element.style.left=window.innerWidth;
+		var pos = 0;
+		var id = setInterval(frame, 1);
+		function frame() {
+			if (pos === element.scrollWidth) {
+				clearInterval(id);
+			} else {
+				pos = pos+3<=element.scrollWidth?pos+3:element.scrollWidth; 
+				element.style.left = window.innerWidth - pos + 'px';
+			}
+		}
 	};
 	
 	var  slideRight = function(element){
 		var originalleft = element.style.left;
 		element.style.overflow="hidden";
-		setTimeout(function(){
-			element.style.display = 'none';
-			element.style.left=originalleft;
-		}, 150);
-		element.animate([{left: originalleft},{left: window.innerWidth+"px"}], 200);
+		var pos = +element.style.left.substr(0, element.style.left.length-2);
+		var id = setInterval(frame, 1);
+		function frame() {
+			if (pos === window.innerWidth) {
+				clearInterval(id);
+			} else {
+				pos=pos+3<=window.innerWidth?pos+3:window.innerWidth; 
+				element.style.left = pos + 'px';
+			}
+		}
 	}
 	
 	var creatBar = function(){
@@ -384,7 +399,7 @@
 				if(this.options.type === 'float'){
 					this.handbar = creatBar.call(this);
 					document.body.appendChild(this.handbar);
-					this.options.element.style.display="none";
+					this.options.element.style.left=window.innerWidth+"px";
 				}
 				this.active = null;
 				if(this.options.active){
@@ -414,7 +429,7 @@
 				this.options.element.style.position = "fixed";
 				var offset = findOffset(this.options.element)
 				this.options.element.style.top = offset.top+"px";
-				this.options.element.style.left = offset.left+"px";
+				this.options.type !== 'float' && (this.options.element.style.left = offset.left+"px");
 				this.options.element.style.width="inherit";
 			}
 		}
