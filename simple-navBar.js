@@ -421,7 +421,7 @@
 					}
 				}
 				this.options.element.classList.add(this.options.theme);
-				$(this.options.element).data["navBar"] = this;//set element data attribute
+				//$(this.options.element).data["navBar"] = this;//set element data attribute
 			}catch(e){
 				console.debug(e); 
 			}
